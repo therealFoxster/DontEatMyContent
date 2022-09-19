@@ -24,7 +24,7 @@
 @end
 
 NSString* deviceName();
-BOOL deviceIsSupported();
+BOOL isDeviceSupported();
 void activate(); 
 void deactivate();
 void center();
