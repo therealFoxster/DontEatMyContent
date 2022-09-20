@@ -33,10 +33,8 @@ NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *cen
 
     // Must check class since YTInlineMutedPlaybackPlayerOverlayViewController doesn't have -(BOOL)isFullscreen
     if ([NSStringFromClass([activeVideoPlayerOverlay class]) isEqualToString:@"YTMainAppVideoPlayerOverlayViewController"] && [activeVideoPlayerOverlay isFullscreen]) {
-        // %log(@"fullscreen"); 
         activate();
     } else {
-        // %log(@"not fullscreen"); 
         center();
     }
 
@@ -45,25 +43,26 @@ NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *cen
 
 - (void)didPressToggleFullscreen {  
     YTMainAppVideoPlayerOverlayViewController *activeVideoPlayerOverlay = [self activeVideoPlayerOverlay];
-    // Entering fullscreen
-    if (![activeVideoPlayerOverlay isFullscreen]) activate();
-    // Exiting fullscreen
-    else deactivate();
+    
+    if (![activeVideoPlayerOverlay isFullscreen]) // Entering fullscreen
+        activate();
+    else // Exiting fullscreen
+        deactivate();
+    
     %orig;
 }
 
 - (void)didSwipeToEnterFullscreen { 
-    %log; 
     %orig; activate(); 
 }
 
 - (void)didSwipeToExitFullscreen { 
-    %log; 
     %orig; deactivate();
 }
 
 - (void)singleVideo:(id)arg1 aspectRatioDidChange:(CGFloat)arg2 {
     aspectRatio = arg2;
+
     if (aspectRatio < THRESHOLD) {
         deactivate();
     } else activate();
@@ -112,19 +111,32 @@ NSString* deviceName() {
 
 BOOL isDeviceSupported() {
     NSString *identifier = deviceName();
+    NSArray *unsupportedDevices = @[
+        @"iPhone14,3", // iPhone 13 Pro Max
+        @"iPhone14,6", // iPhone SE 3rd generation
+        @"iPhone14,8" // iPhone 14 Plus
+    ];
+
+    for (NSString *unsupportedDevice in unsupportedDevices) {
+        if ([identifier isEqualToString:unsupportedDevice]) {
+            return NO;
+        }
+    }
+
     if ([identifier containsString:@"iPhone"]) {
         NSString *model = [identifier stringByReplacingOccurrencesOfString:@"iPhone" withString:@""];
-        if ([model isEqualToString:@"13,1"]) // iPhone 12 mini
+        model = [model stringByReplacingOccurrencesOfString:@"," withString:@"."];
+        if ([identifier isEqualToString:@"iPhone13,1"]) { // iPhone 12 mini
             return YES; 
-        else if ([model floatValue] >= 14.0) // iPhone 13 series and newer
+        } else if ([model floatValue] >= 14.0) { // iPhone 13 series and newer
             return YES;
-        else return NO;
+        } else return NO;
     } else return NO;
 }
 
 void activate() {
     if (aspectRatio < THRESHOLD || zoomToFill) return;
-    NSLog(@"activate");
+    // NSLog(@"activate");
     center();
     renderingView.translatesAutoresizingMaskIntoConstraints = NO;
     widthConstraint.active = YES;
@@ -132,7 +144,7 @@ void activate() {
 }
 
 void deactivate() {
-    NSLog(@"deactivate");
+    // NSLog(@"deactivate");
     center();
     renderingView.translatesAutoresizingMaskIntoConstraints = YES;
     widthConstraint.active = NO;
