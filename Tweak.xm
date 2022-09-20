@@ -4,6 +4,7 @@
 
 const double THRESHOLD = 1.99;
 double aspectRatio = 16/9;
+bool zoomToFill = false;
 
 MLHAMSBDLSampleBufferRenderingView *renderingView;
 NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
@@ -77,8 +78,10 @@ NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *cen
 - (void)didRecognizePinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
     // %log((CGFloat) [pinchGestureRecognizer scale], (CGFloat) [pinchGestureRecognizer velocity]);
     if ([pinchGestureRecognizer velocity] <= 0.0) { // >>Zoom out<<
+        zoomToFill = false;
         activate();
     } else if ([pinchGestureRecognizer velocity] > 0.0) { // <<Zoom in>>
+        zoomToFill = true;
         deactivate();
     }
 
@@ -120,7 +123,7 @@ BOOL isDeviceSupported() {
 }
 
 void activate() {
-    if (aspectRatio < THRESHOLD) return;
+    if (aspectRatio < THRESHOLD || zoomToFill) return;
     NSLog(@"activate");
     center();
     renderingView.translatesAutoresizingMaskIntoConstraints = NO;
