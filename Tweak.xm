@@ -2,9 +2,11 @@
 #import <substrate.h>
 #import "Tweak.h"
 
-const double THRESHOLD = 1.99;
+#define UNSUPPORTED_DEVICES @[@"iPhone14,3", @"iPhone14,6", @"iPhone14,8"]
+#define THRESHOLD 1.99
+
 double aspectRatio = 16/9;
-bool zoomToFill = false;
+bool zoomedToFill = false;
 
 MLHAMSBDLSampleBufferRenderingView *renderingView;
 NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
@@ -77,10 +79,10 @@ NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *cen
 - (void)didRecognizePinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
     // %log((CGFloat) [pinchGestureRecognizer scale], (CGFloat) [pinchGestureRecognizer velocity]);
     if ([pinchGestureRecognizer velocity] <= 0.0) { // >>Zoom out<<
-        zoomToFill = false;
+        zoomedToFill = false;
         activate();
     } else if ([pinchGestureRecognizer velocity] > 0.0) { // <<Zoom in>>
-        zoomToFill = true;
+        zoomedToFill = true;
         deactivate();
     }
 
@@ -111,14 +113,10 @@ NSString* deviceName() {
 
 BOOL isDeviceSupported() {
     NSString *identifier = deviceName();
-    NSArray *unsupportedDevices = @[
-        @"iPhone14,3", // iPhone 13 Pro Max
-        @"iPhone14,6", // iPhone SE 3rd generation
-        @"iPhone14,8" // iPhone 14 Plus
-    ];
-
-    for (NSString *unsupportedDevice in unsupportedDevices) {
-        if ([identifier isEqualToString:unsupportedDevice]) {
+    NSArray *unsupportedDevices = UNSUPPORTED_DEVICES;
+    
+    for (NSString *device in unsupportedDevices) {
+        if ([device isEqualToString:identifier]) {
             return NO;
         }
     }
@@ -135,7 +133,7 @@ BOOL isDeviceSupported() {
 }
 
 void activate() {
-    if (aspectRatio < THRESHOLD || zoomToFill) return;
+    if (aspectRatio < THRESHOLD || zoomedToFill) return;
     // NSLog(@"activate");
     center();
     renderingView.translatesAutoresizingMaskIntoConstraints = NO;
