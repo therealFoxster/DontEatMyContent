@@ -64,11 +64,13 @@ NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *cen
 
 - (void)singleVideo:(id)arg1 aspectRatioDidChange:(CGFloat)arg2 {
     aspectRatio = arg2;
-
-    if (aspectRatio < THRESHOLD) {
+    if (aspectRatio == 0.0) { 
+        // App backgrounded
+    } else if (aspectRatio < THRESHOLD) {
         deactivate();
-    } else activate();
-
+    } else {
+        activate();
+    }
     %orig(arg1, arg2);
 }
 
