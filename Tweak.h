@@ -24,7 +24,8 @@
 @end
 
 NSString* deviceName();
-BOOL isDeviceSupported();
+BOOL deviceSupported();
+void aspectRatioChanged(CGFloat arg);
 void activate(); 
 void deactivate();
 void center();
