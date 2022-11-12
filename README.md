@@ -7,6 +7,8 @@ The rendering view is constrained to the safe area layout guide of its container
 ## Compatibility
 Supports iPhone 12 mini, iPhone 13 series and newer **except** iPhone SE 3rd generation, iPhone 13 Pro Max and iPhone 14 Plus.
 
+> **Note**: From [v1.0.4](https://github.com/therealFoxster/DontEatMyContent/releases/tag/v1.0.4) onwards, the tweak only supports YouTube versions that got the [October 2022 redesign](https://blog.youtube/news-and-events/an-updated-look-and-feel-for-youtube/). v1.0.4 was tested and confirmed to be working with YouTube v17.43.1.
+
 ## Grab It
 - .ipa file (tweak-injected YouTube app): https://therealfoxster.github.io/altsource/app.html?id=youtube
 - .deb file: https://github.com/therealFoxster/DontEatMyContent/releases/latest
@@ -21,3 +23,6 @@ Supports iPhone 12 mini, iPhone 13 series and newer **except** iPhone SE 3rd gen
 
 ### Zoomed to Fill
 ![zoom to fill](../assets/screenshots/IMG_2098.PNG)
+
+## License
+[The MIT License](LICENSE.md)
