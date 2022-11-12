@@ -11,7 +11,6 @@
 @end
 
 @interface MLHAMSBDLSampleBufferRenderingView : UIView
-
 @end
 
 @interface YTMainAppVideoPlayerOverlayViewController : UIViewController
@@ -20,12 +19,10 @@
 @end
 
 @interface YTMainAppVideoPlayerOverlayView : UIView
-
 @end
 
-NSString* deviceName();
-BOOL deviceSupported();
-void aspectRatioChanged(CGFloat arg);
-void activate(); 
-void deactivate();
-void center();
+static NSString* DEMC_getDeviceModelIdentifier();
+static BOOL DEMC_deviceIsSupported();
+static void DEMC_activate();
+static void DEMC_deactivate(); 
+static void DEMC_centerRenderingView();
