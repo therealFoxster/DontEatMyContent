@@ -6,22 +6,29 @@
 @end
 
 @interface YTPlayerView : UIView
-- (BOOL)zoomToFill;
 - (id)renderingView;
-@end
-
-@interface MLHAMSBDLSampleBufferRenderingView : UIView
 @end
 
 @interface YTMainAppVideoPlayerOverlayViewController : UIViewController
 - (BOOL)isFullscreen;
-- (id)videoPlayerOverlayView;
 @end
 
-@interface YTMainAppVideoPlayerOverlayView : UIView
+@interface HAMSBDLSampleBufferRenderingView : UIView
 @end
 
-static NSString* DEMC_getDeviceModelIdentifier();
+@interface MLHAMSBDLSampleBufferRenderingView : HAMSBDLSampleBufferRenderingView
+@end
+
+@interface YTMainAppEngagementPanelViewController : UIViewController
+- (BOOL)isLandscapeEngagementPanel;
+- (BOOL)isPeekingSupported;
+@end
+
+@interface YTEngagementPanelContainerViewController : UIViewController
+- (BOOL)isLandscapeEngagementPanel;
+- (BOOL)isPeekingSupported;
+@end
+
 static BOOL DEMC_deviceIsSupported();
 static void DEMC_activate();
 static void DEMC_deactivate(); 
