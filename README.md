@@ -16,13 +16,13 @@ Supports iPhone 12 mini, iPhone 13 series and newer **except** iPhone SE 3rd gen
 ## Screenshots (iPhone 13 mini)
 
 ### Original Implementation
-![original](../assets/screenshots/IMG_2096.PNG)
+![original](../assets/readme/original.PNG)
 
 ### Tweaked Implementation
-![tweaked](../assets/screenshots/IMG_2097.PNG)
+![tweaked](../assets/readme/tweaked.PNG)
 
 ### Zoomed to Fill
-![zoom to fill](../assets/screenshots/IMG_2098.PNG)
+![zoom to fill](../assets/readme/zoomed_to_fill.PNG)
 
 ## License
 [The MIT License](LICENSE.md)
