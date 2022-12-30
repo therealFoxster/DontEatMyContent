@@ -29,7 +29,7 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
     renderingView = [playerView renderingView];
 
     // Making renderingView a bit larger since constraining to safe area leaves a gap between the notch and video
-    CGFloat constant = 24.5; // Tested on iPhone 13 mini
+    CGFloat constant = 22.0; // Tested on iPhone 13 mini
 
     widthConstraint = [renderingView.widthAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.widthAnchor constant:constant];
     heightConstraint = [renderingView.heightAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.heightAnchor constant:constant];
