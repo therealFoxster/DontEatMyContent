@@ -3,6 +3,7 @@
 @interface YTPlayerViewController : UIViewController
 - (id)activeVideoPlayerOverlay;
 - (id)playerView;
+- (BOOL)isCurrentVideoVertical;
 @end
 
 @interface YTPlayerView : UIView
@@ -29,7 +30,7 @@
 - (BOOL)isPeekingSupported;
 @end
 
-static BOOL DEMC_deviceIsSupported();
+static BOOL DEMC_isDeviceSupported();
 static void DEMC_activate();
 static void DEMC_deactivate(); 
 static void DEMC_centerRenderingView();

@@ -5,16 +5,17 @@
 #define UNSUPPORTED_DEVICES @[@"iPhone14,3", @"iPhone14,6", @"iPhone14,8"]
 #define THRESHOLD 1.99
 
-static double videoAspectRatio = 16/9;
-static bool zoomedToFill = false;
-static bool engagementPanelIsVisible = false, removeEngagementPanelViewControllerWithIdentifierCalled = false;
+static CGFloat videoAspectRatio = 16/9;
+static BOOL isZoomedToFill = NO;
+static BOOL isEngagementPanelVisible = NO;
+static BOOL isRemoveEngagementPanelViewControllerWithIdentifierCalled = NO;
 
 static MLHAMSBDLSampleBufferRenderingView *renderingView;
 static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
 
 %group DontEatMyContent
 
-// Retrieve video aspect ratio 
+// Retrieve video aspect ratio
 %hook YTPlayerView
 - (void)setAspectRatio:(CGFloat)aspectRatio {
     %orig(aspectRatio);
@@ -35,7 +36,7 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
     heightConstraint = [renderingView.heightAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.heightAnchor constant:constant];
     centerXConstraint = [renderingView.centerXAnchor constraintEqualToAnchor:renderingViewContainer.centerXAnchor];
     centerYConstraint = [renderingView.centerYAnchor constraintEqualToAnchor:renderingViewContainer.centerYAnchor];
-    
+
     // playerView.backgroundColor = [UIColor blueColor];
     // renderingViewContainer.backgroundColor = [UIColor greenColor];
     // renderingView.backgroundColor = [UIColor redColor];
@@ -43,40 +44,45 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
     YTMainAppVideoPlayerOverlayViewController *activeVideoPlayerOverlay = [self activeVideoPlayerOverlay];
 
     // Must check class since YTInlineMutedPlaybackPlayerOverlayViewController doesn't have -(BOOL)isFullscreen
-    if ([NSStringFromClass([activeVideoPlayerOverlay class]) isEqualToString:@"YTMainAppVideoPlayerOverlayViewController"] // isKindOfClass doesn't work for some reason
-    && [activeVideoPlayerOverlay isFullscreen]) {
-        if (!zoomedToFill && !engagementPanelIsVisible) DEMC_activate();
-    } else {
-        DEMC_centerRenderingView();
-    }
+    if ([activeVideoPlayerOverlay isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)] &&
+        [activeVideoPlayerOverlay isFullscreen] && !isZoomedToFill && !isEngagementPanelVisible)
+        DEMC_activate();
+    else DEMC_centerRenderingView();
 
     %orig(animated);
 }
-- (void)didPressToggleFullscreen {
-    %orig;
-    if (![[self activeVideoPlayerOverlay] isFullscreen]) { // Entering full screen
-        if (!zoomedToFill && !engagementPanelIsVisible) DEMC_activate();
-    } else { // Exiting full screen
-        DEMC_deactivate();
-    } 
-}
-- (void)didSwipeToEnterFullscreen { 
-    %orig; 
-    if (!zoomedToFill && !engagementPanelIsVisible) DEMC_activate();
-}
-- (void)didSwipeToExitFullscreen { 
-    %orig; 
-    DEMC_deactivate(); 
-}
 // New video played
--(void)playbackController:(id)playbackController didActivateVideo:(id)video withPlaybackData:(id)playbackData {
+- (void)playbackController:(id)playbackController didActivateVideo:(id)video withPlaybackData:(id)playbackData {
     %orig(playbackController, video, playbackData);
-    if ([[self activeVideoPlayerOverlay] isFullscreen]) // New video played while in full screen (landscape)
+
+    isEngagementPanelVisible = NO;
+    isRemoveEngagementPanelViewControllerWithIdentifierCalled = NO;
+
+    if ([[self activeVideoPlayerOverlay] isFullscreen])
+        // New video played while in full screen (landscape)
         // Activate since new videos played in full screen aren't zoomed-to-fill by default
         // (i.e. the notch/Dynamic Island will cut into content when playing a new video in full screen)
-        DEMC_activate(); 
-    engagementPanelIsVisible = false;
-    removeEngagementPanelViewControllerWithIdentifierCalled = false;
+        DEMC_activate();
+    else if (![self isCurrentVideoVertical] && ((YTPlayerView *)[self playerView]).userInteractionEnabled)
+        DEMC_deactivate();
+}
+- (void)setPlayerViewLayout:(int)layout {
+    %orig(layout);
+
+    if (![[self activeVideoPlayerOverlay] isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)]) return;
+
+    switch (layout) {
+    case 1: // Mini bar
+        break;
+    case 2:
+        DEMC_deactivate();
+        break;
+    case 3: // Fullscreen
+        if (!isZoomedToFill && !isEngagementPanelVisible) DEMC_activate();
+        break;
+    default:
+        break;
+    }
 }
 %end
 
@@ -89,10 +95,10 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
 // Detect zoom to fill
 - (void)showLabelForSnapState:(NSInteger)snapState {
     if (snapState == 0) { // Original
-        zoomedToFill = false;
+        isZoomedToFill = NO;
         DEMC_activate();
     } else if (snapState == 1) { // Zoomed to fill
-        zoomedToFill = true;
+        isZoomedToFill = YES;
         // No need to deactivate constraints as it's already done in -(void)didRecognizePinch:(UIPinchGestureRecognizer *)
     }
     %orig(snapState);
@@ -103,11 +109,11 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
 %hook YTWatchMiniBarViewController
 - (void)dismissMiniBarWithVelocity:(CGFloat)velocity gestureType:(int)gestureType {
     %orig(velocity, gestureType);
-    zoomedToFill = false; // Setting to false since YouTube undoes zoom-to-fill when mini bar is dismissed
+    isZoomedToFill = NO; // YouTube undoes zoom-to-fill when mini bar is dismissed
 }
 - (void)dismissMiniBarWithVelocity:(CGFloat)velocity gestureType:(int)gestureType skipShouldDismissCheck:(BOOL)skipShouldDismissCheck {
     %orig(velocity, gestureType, skipShouldDismissCheck);
-    zoomedToFill = false;
+    isZoomedToFill = NO;
 }
 %end
 
@@ -118,25 +124,24 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
         // Shorts (only Shorts support peeking, I think)
     } else {
         // Everything else
-        engagementPanelIsVisible = true;
+        isEngagementPanelVisible = YES;
         if ([self isLandscapeEngagementPanel]) {
             DEMC_deactivate();
         }
     }
     %orig(animated);
 }
-// Engagement panel about to dismiss
-// - (void)viewDidDisappear:(BOOL)animated { %orig; %log; } // Called too late & isn't reliable so sometimes constraints aren't activated even when engagement panel is closed
 %end
 
 %hook YTEngagementPanelContainerViewController
 // Engagement panel about to dismiss
-- (void)notifyEngagementPanelContainerControllerWillHideFinalPanel { // Called in time but crashes if plays new video while in full screen causing engagement panel dismissal
+- (void)notifyEngagementPanelContainerControllerWillHideFinalPanel {
+    // Crashes if plays new video while in full screen causing engagement panel dismissal
     // Must check if engagement panel was dismissed because new video played
     // (i.e. if -(void)removeEngagementPanelViewControllerWithIdentifier:(id) was called prior)
-    if (![self isPeekingSupported] && !removeEngagementPanelViewControllerWithIdentifierCalled) {
-        engagementPanelIsVisible = false;
-        if ([self isLandscapeEngagementPanel] && !zoomedToFill) {
+    if (![self isPeekingSupported] && !isRemoveEngagementPanelViewControllerWithIdentifierCalled) {
+        isEngagementPanelVisible = NO;
+        if ([self isLandscapeEngagementPanel] && !isZoomedToFill) {
             DEMC_activate();
         }
     }
@@ -144,18 +149,18 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
 }
 - (void)removeEngagementPanelViewControllerWithIdentifier:(id)identifier {
     // Usually called when engagement panel is open & new video is played or mini bar is dismissed
-    removeEngagementPanelViewControllerWithIdentifierCalled = true;
+    isRemoveEngagementPanelViewControllerWithIdentifierCalled = YES;
     %orig(identifier);
 }
 %end
 
-%end// group DontEatMyContent
+%end // group DontEatMyContent
 
 %ctor {
-    if (DEMC_deviceIsSupported()) %init(DontEatMyContent);
+    if (DEMC_isDeviceSupported()) %init(DontEatMyContent);
 }
 
-static BOOL DEMC_deviceIsSupported() {
+static BOOL DEMC_isDeviceSupported() {
     // Get device model identifier (e.g. iPhone14,4)
     // https://stackoverflow.com/a/11197770/19227228
     struct utsname systemInfo;
@@ -172,8 +177,8 @@ static BOOL DEMC_deviceIsSupported() {
     if ([deviceModelID containsString:@"iPhone"]) {
         if ([deviceModelID isEqualToString:@"iPhone13,1"]) {
             // iPhone 12 mini
-            return YES; 
-        } 
+            return YES;
+        }
         NSString *modelNumber = [[deviceModelID stringByReplacingOccurrencesOfString:@"iPhone" withString:@""] stringByReplacingOccurrencesOfString:@"," withString:@"."];
         if ([modelNumber floatValue] >= 14.0) {
             // iPhone 13 series and newer
@@ -196,10 +201,7 @@ static void DEMC_activate() {
 
 static void DEMC_deactivate() {
     // NSLog(@"deactivate");
-    DEMC_centerRenderingView();
     renderingView.translatesAutoresizingMaskIntoConstraints = YES;
-    widthConstraint.active = NO;
-    heightConstraint.active = NO;
 }
 
 static void DEMC_centerRenderingView() {
