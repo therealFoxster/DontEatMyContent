@@ -1,5 +1,4 @@
 #import <sys/utsname.h>
-#import <substrate.h>
 #import "Tweak.h"
 
 #define UNSUPPORTED_DEVICES @[@"iPhone14,3", @"iPhone14,6", @"iPhone14,8"]
@@ -32,7 +31,7 @@ static void DEMC_centerRenderingView();
 %hook YTPlayerViewController
 - (void)viewDidAppear:(BOOL)animated {
     YTPlayerView *playerView = [self playerView];
-    UIView *renderingViewContainer = MSHookIvar<UIView *>(playerView, "_renderingViewContainer");
+    UIView *renderingViewContainer = [playerView valueForKey:@"_renderingViewContainer"];
     renderingView = [playerView renderingView];
 
     widthConstraint = [renderingView.widthAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.widthAnchor constant:constant];
