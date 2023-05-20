@@ -1,6 +1,6 @@
 .theos/
 packages/
-.tests/
+.test/
 
 # Temporary files
 *~

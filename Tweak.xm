@@ -6,12 +6,18 @@
 #define THRESHOLD 1.99
 
 static CGFloat videoAspectRatio = 16/9;
+CGFloat constant; // Make renderingView a bit larger since constraining to safe area leaves a gap between the notch and video
 static BOOL isZoomedToFill = NO;
 static BOOL isEngagementPanelVisible = NO;
 static BOOL isRemoveEngagementPanelViewControllerWithIdentifierCalled = NO;
 
 static MLHAMSBDLSampleBufferRenderingView *renderingView;
 static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
+
+static BOOL DEMC_isDeviceSupported();
+static void DEMC_activate();
+static void DEMC_deactivate();
+static void DEMC_centerRenderingView();
 
 %group DontEatMyContent
 
@@ -29,17 +35,20 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
     UIView *renderingViewContainer = MSHookIvar<UIView *>(playerView, "_renderingViewContainer");
     renderingView = [playerView renderingView];
 
-    // Making renderingView a bit larger since constraining to safe area leaves a gap between the notch and video
-    CGFloat constant = 22.0; // Tested on iPhone 13 mini & 14 Pro Max
-
     widthConstraint = [renderingView.widthAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.widthAnchor constant:constant];
     heightConstraint = [renderingView.heightAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.heightAnchor constant:constant];
     centerXConstraint = [renderingView.centerXAnchor constraintEqualToAnchor:renderingViewContainer.centerXAnchor];
     centerYConstraint = [renderingView.centerYAnchor constraintEqualToAnchor:renderingViewContainer.centerYAnchor];
 
-    // playerView.backgroundColor = [UIColor blueColor];
-    // renderingViewContainer.backgroundColor = [UIColor greenColor];
-    // renderingView.backgroundColor = [UIColor redColor];
+    if (IS_COLOR_VIEWS_ENABLED) {
+        playerView.backgroundColor = [UIColor blueColor];
+        renderingViewContainer.backgroundColor = [UIColor greenColor];
+        renderingView.backgroundColor = [UIColor redColor];
+    } else {
+        playerView.backgroundColor = nil;
+        renderingViewContainer.backgroundColor = nil;
+        renderingView.backgroundColor = [UIColor blackColor];
+    }
 
     YTMainAppVideoPlayerOverlayViewController *activeVideoPlayerOverlay = [self activeVideoPlayerOverlay];
 
@@ -47,7 +56,6 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
     if ([activeVideoPlayerOverlay isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)] &&
         [activeVideoPlayerOverlay isFullscreen] && !isZoomedToFill && !isEngagementPanelVisible)
         DEMC_activate();
-    else DEMC_centerRenderingView();
 
     %orig(animated);
 }
@@ -157,7 +165,12 @@ static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstrain
 %end // group DontEatMyContent
 
 %ctor {
-    if (DEMC_isDeviceSupported()) %init(DontEatMyContent);
+    constant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
+    if (constant == 0) {
+        constant = DEFAULT_CONSTANT;
+        [[NSUserDefaults standardUserDefaults] setFloat:constant forKey:SAFE_AREA_CONSTANT_KEY];
+    }
+    if (IS_TWEAK_ENABLED && DEMC_isDeviceSupported()) %init(DontEatMyContent);
 }
 
 static BOOL DEMC_isDeviceSupported() {
