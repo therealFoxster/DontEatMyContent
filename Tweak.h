@@ -1,5 +1,7 @@
 #import <UIKit/UIKit.h>
 
+#define DEMC @"DontEatMyContent"
+
 // Keys
 #define ENABLED_KEY @"DEMC_enabled"
 #define COLOR_VIEWS_ENABLED_KEY @"DEMC_colorViewsEnabled"
@@ -8,6 +10,7 @@
 #define DEFAULT_CONSTANT 22.0
 #define IS_TWEAK_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:ENABLED_KEY]
 #define IS_COLOR_VIEWS_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:COLOR_VIEWS_ENABLED_KEY]
+#define LOCALIZED_STRING(s) [bundle localizedStringForKey:s value:nil table:nil]
 
 @interface YTPlayerViewController : UIViewController
 - (id)activeVideoPlayerOverlay;
@@ -34,6 +37,10 @@
 @interface YTEngagementPanelContainerViewController : UIViewController
 - (BOOL)isLandscapeEngagementPanel;
 - (BOOL)isPeekingSupported;
+@end
+
+@interface YTLabel : UILabel
+@property (nonatomic, copy, readwrite) NSString *text;
 @end
 
 @interface YTSettingsCell: UICollectionViewCell

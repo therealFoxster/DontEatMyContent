@@ -1,4 +1,5 @@
 #import <sys/utsname.h>
+#import <rootless.h>
 #import "Tweak.h"
 
 #define UNSUPPORTED_DEVICES @[@"iPhone14,3", @"iPhone14,6", @"iPhone14,8"]
@@ -14,11 +15,13 @@ static MLHAMSBDLSampleBufferRenderingView *renderingView;
 static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
 
 static BOOL DEMC_isDeviceSupported();
-static void DEMC_activate();
-static void DEMC_deactivate();
+static void DEMC_activateConstraints();
+static void DEMC_deactivateConstraints();
 static void DEMC_centerRenderingView();
+void DEMC_showSnackBar(NSString *text);
+NSBundle *DEMC_getTweakBundle();
 
-%group DontEatMyContent
+%group DEMC_Tweak
 
 // Retrieve video aspect ratio
 %hook YTPlayerView
@@ -54,7 +57,7 @@ static void DEMC_centerRenderingView();
     // Must check class since YTInlineMutedPlaybackPlayerOverlayViewController doesn't have -(BOOL)isFullscreen
     if ([activeVideoPlayerOverlay isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)] &&
         [activeVideoPlayerOverlay isFullscreen] && !isZoomedToFill && !isEngagementPanelVisible)
-        DEMC_activate();
+        DEMC_activateConstraints();
 
     %orig(animated);
 }
@@ -69,9 +72,9 @@ static void DEMC_centerRenderingView();
         // New video played while in full screen (landscape)
         // Activate since new videos played in full screen aren't zoomed-to-fill by default
         // (i.e. the notch/Dynamic Island will cut into content when playing a new video in full screen)
-        DEMC_activate();
+        DEMC_activateConstraints();
     else if (![self isCurrentVideoVertical] && ((YTPlayerView *)[self playerView]).userInteractionEnabled)
-        DEMC_deactivate();
+        DEMC_deactivateConstraints();
 }
 - (void)setPlayerViewLayout:(int)layout {
     %orig(layout);
@@ -82,10 +85,10 @@ static void DEMC_centerRenderingView();
     case 1: // Mini bar
         break;
     case 2:
-        DEMC_deactivate();
+        DEMC_deactivateConstraints();
         break;
     case 3: // Fullscreen
-        if (!isZoomedToFill && !isEngagementPanelVisible) DEMC_activate();
+        if (!isZoomedToFill && !isEngagementPanelVisible) DEMC_activateConstraints();
         break;
     default:
         break;
@@ -96,14 +99,14 @@ static void DEMC_centerRenderingView();
 // Pinch to zoom
 %hook YTVideoFreeZoomOverlayView
 - (void)didRecognizePinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
-    DEMC_deactivate();
+    DEMC_deactivateConstraints();
     %orig(pinchGestureRecognizer);
 }
 // Detect zoom to fill
 - (void)showLabelForSnapState:(NSInteger)snapState {
     if (snapState == 0) { // Original
         isZoomedToFill = NO;
-        DEMC_activate();
+        DEMC_activateConstraints();
     } else if (snapState == 1) { // Zoomed to fill
         isZoomedToFill = YES;
         // No need to deactivate constraints as it's already done in -(void)didRecognizePinch:(UIPinchGestureRecognizer *)
@@ -133,7 +136,7 @@ static void DEMC_centerRenderingView();
         // Everything else
         isEngagementPanelVisible = YES;
         if ([self isLandscapeEngagementPanel]) {
-            DEMC_deactivate();
+            DEMC_deactivateConstraints();
         }
     }
     %orig(animated);
@@ -149,7 +152,7 @@ static void DEMC_centerRenderingView();
     if (![self isPeekingSupported] && !isRemoveEngagementPanelViewControllerWithIdentifierCalled) {
         isEngagementPanelVisible = NO;
         if ([self isLandscapeEngagementPanel] && !isZoomedToFill) {
-            DEMC_activate();
+            DEMC_activateConstraints();
         }
     }
     %orig;
@@ -161,15 +164,46 @@ static void DEMC_centerRenderingView();
 }
 %end
 
-%end // group DontEatMyContent
+%end // group DEMC_Tweak
+
+%group DEMC_UnsupportedDevice
+
+// Get tweak settings' index path & prevent it from being opened on unsupported devices
+NSIndexPath *tweakIndexPath;
+%hook YTCollectionViewController
+- (id)collectionView:(id)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+	YTSettingsCell *cell = %orig;
+	if ([cell isKindOfClass:%c(YTSettingsCell)]) {
+		YTLabel *title = [cell valueForKey:@"_titleLabel"];
+		if ([title.text isEqualToString:DEMC]) tweakIndexPath = indexPath;
+	}
+	return cell;
+}
+- (BOOL)collectionView:(id)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+	if (indexPath == tweakIndexPath) {
+        NSBundle *bundle = DEMC_getTweakBundle();
+		DEMC_showSnackBar(LOCALIZED_STRING(@"UNSUPPORTED_DEVICE"));
+		return NO;
+	}
+	return %orig;
+}
+%end
+
+%end // group DEMC_UnsupportedDevice
 
 %ctor {
+    if (!DEMC_isDeviceSupported()) {
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:ENABLED_KEY];
+		%init(DEMC_UnsupportedDevice);
+        return;
+	}
+
     constant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
-    if (constant == 0) {
+    if (constant == 0) { // First launch probably
         constant = DEFAULT_CONSTANT;
         [[NSUserDefaults standardUserDefaults] setFloat:constant forKey:SAFE_AREA_CONSTANT_KEY];
     }
-    if (IS_TWEAK_ENABLED && DEMC_isDeviceSupported()) %init(DontEatMyContent);
+    if (IS_TWEAK_ENABLED) %init(DEMC_Tweak);
 }
 
 static BOOL DEMC_isDeviceSupported() {
@@ -199,9 +233,9 @@ static BOOL DEMC_isDeviceSupported() {
     } else return NO;
 }
 
-static void DEMC_activate() {
+static void DEMC_activateConstraints() {
     if (videoAspectRatio < THRESHOLD) {
-        DEMC_deactivate();
+        DEMC_deactivateConstraints();
         return;
     }
     // NSLog(@"activate");
@@ -211,7 +245,7 @@ static void DEMC_activate() {
     heightConstraint.active = YES;
 }
 
-static void DEMC_deactivate() {
+static void DEMC_deactivateConstraints() {
     // NSLog(@"deactivate");
     renderingView.translatesAutoresizingMaskIntoConstraints = YES;
 }
@@ -219,4 +253,23 @@ static void DEMC_deactivate() {
 static void DEMC_centerRenderingView() {
     centerXConstraint.active = YES;
     centerYConstraint.active = YES;
+}
+
+void DEMC_showSnackBar(NSString *text) {
+	YTHUDMessage *message = [%c(YTHUDMessage) messageWithText:text];
+	GOOHUDManagerInternal *manager = [%c(GOOHUDManagerInternal) sharedInstance];
+	[manager showMessageMainThread:message];
+}
+
+NSBundle *DEMC_getTweakBundle() {
+    static NSBundle *bundle = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^ {
+		NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"DontEatMyContent" ofType:@"bundle"];
+		if (bundlePath)
+			bundle = [NSBundle bundleWithPath:bundlePath];
+		else // Rootless
+			bundle = [NSBundle bundleWithPath:ROOT_PATH_NS(@"/Library/Application Support/DontEatMyContent.bundle")];
+	});
+    return bundle;
 }

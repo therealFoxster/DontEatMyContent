@@ -15,6 +15,7 @@
 "CHANGES_SAVED" = "Your changes were saved";
 
 "EXIT" = "Exit";
-"CANCEL" = "Cancel";
-"EXIT_YT" = "Exit YouTube?";
+"LATER" = "Later";
 "EXIT_YT_DESC" = "Relaunch YouTube to apply changes";
+
+"UNSUPPORTED_DEVICE" = "This device is not supported";

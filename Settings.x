@@ -1,20 +1,21 @@
 #import "Tweak.h"
-#import <rootless.h>
 
 // Adapted from 
 // https://github.com/PoomSmart/YouPiP/blob/bd04bf37be3d01540db418061164ae17a8f0298e/Settings.x
 // https://github.com/qnblackcat/uYouPlus/blob/265927b3900d886e2085d05bfad7cd4157be87d2/Settings.xm
 
-#define LOCALIZED_STRING(s) [bundle localizedStringForKey:s value:nil table:nil]
-
 static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a random number)
 extern CGFloat constant;
 
-static void DEMC_showSnackBar(NSString *text) {
-	YTHUDMessage *message = [%c(YTHUDMessage) messageWithText:text];
-	GOOHUDManagerInternal *manager = [%c(GOOHUDManagerInternal) sharedInstance];
-	[manager showMessageMainThread:message];
-}
+extern void DEMC_showSnackBar(NSString *text);
+extern NSBundle *DEMC_getTweakBundle();
+
+// Category for additional functions
+@interface YTSettingsSectionItemManager (_DEMC)
+- (void)updateDEMCSectionWithEntry:(id)entry;
+@end
+
+%group DEMC_Settings
 
 %hook YTAppSettingsPresentationData
 + (NSArray *)settingsCategoryOrder {
@@ -27,27 +28,12 @@ static void DEMC_showSnackBar(NSString *text) {
 }
 %end
 
-// Category for additional DEMC functions
-@interface YTSettingsSectionItemManager (DEMC)
-- (void)DEMC_updateSectionWithEntry:(id)entry;
-@end
-
 %hook YTSettingsSectionItemManager
 %new
-- (void)DEMC_updateSectionWithEntry:(id)entry {
+- (void)updateDEMCSectionWithEntry:(id)entry {
 	YTSettingsViewController *delegate = [self valueForKey:@"_dataDelegate"];
 	NSMutableArray *sectionItems = [NSMutableArray array]; // Create autoreleased array
-
-	// Get tweak bundle
-	static NSBundle *bundle = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"DontEatMyContent" ofType:@"bundle"];
-		if (bundlePath)
-			bundle = [NSBundle bundleWithPath:bundlePath];
-		else // Rootless
-			bundle = [NSBundle bundleWithPath:ROOT_PATH_NS(@"/Library/Application Support/DontEatMyContent.bundle")];
-	});
+	NSBundle *bundle = DEMC_getTweakBundle();
 
 	// Enabled
 	YTSettingsSectionItem *enabled = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"ENABLED")
@@ -57,16 +43,17 @@ static void DEMC_showSnackBar(NSString *text) {
 		switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
 			[[NSUserDefaults standardUserDefaults] setBool:enabled forKey:ENABLED_KEY];
 			
-			YTAlertView *alert = [%c(YTAlertView) confirmationDialogWithAction:^ {
+			YTAlertView *alert = [%c(YTAlertView) confirmationDialogWithAction:^
+				{
 					// https://stackoverflow.com/a/17802404/19227228
 					[[UIApplication sharedApplication] performSelector:@selector(suspend)];
 					[NSThread sleepForTimeInterval:0.5];
 					exit(0);
 				}
 				actionTitle:LOCALIZED_STRING(@"EXIT")
-				cancelTitle:LOCALIZED_STRING(@"CANCEL")
+				cancelTitle:LOCALIZED_STRING(@"LATER")
 			];
-			alert.title = LOCALIZED_STRING(@"EXIT_YT");
+			alert.title = DEMC;
 			alert.subtitle = LOCALIZED_STRING(@"EXIT_YT_DESC");
 			[alert show];
 
@@ -115,11 +102,11 @@ static void DEMC_showSnackBar(NSString *text) {
 				parentResponder:[self parentResponder]
 			];
 
-        	[settingsViewController pushViewController:picker];
+			[settingsViewController pushViewController:picker];
 			return YES;
 		}
 	];
-	[sectionItems addObject:constraintConstant];
+	if (IS_TWEAK_ENABLED) [sectionItems addObject:constraintConstant];
 
 	// Color views
 	YTSettingsSectionItem *colorViews = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"COLOR_VIEWS")
@@ -133,7 +120,7 @@ static void DEMC_showSnackBar(NSString *text) {
 		}
 		settingItemId:0
 	];
-	[sectionItems addObject:colorViews];
+	if (IS_TWEAK_ENABLED) [sectionItems addObject:colorViews];
 
 	// Report an issue
 	YTSettingsSectionItem *reportIssue = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"REPORT_ISSUE")
@@ -159,16 +146,22 @@ static void DEMC_showSnackBar(NSString *text) {
 
 	[delegate setSectionItems:sectionItems 
 		forCategory:sectionId 
-		title:@"DontEatMyContent" 
+		title:DEMC
 		titleDescription:nil 
 		headerHidden:NO
 	];
 }
 - (void)updateSectionForCategory:(NSUInteger)category withEntry:(id)entry {
     if (category == sectionId) {
-        [self DEMC_updateSectionWithEntry:entry];
+        [self updateDEMCSectionWithEntry:entry];
         return;
     }
     %orig;
 }
 %end
+
+%end // group DEMC_Settings
+
+%ctor {
+	%init(DEMC_Settings);
+}
