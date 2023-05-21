@@ -5,7 +5,7 @@
 #define UNSUPPORTED_DEVICES @[@"iPhone14,3", @"iPhone14,6", @"iPhone14,8"]
 #define THRESHOLD 1.99
 
-CGFloat constant; // Make renderingView a bit larger since constraining to safe area leaves a gap between the notch and video
+CGFloat constant; // Makes rendering view a bit larger since constraining to safe area leaves a gap between the notch/Dynamic Island and video
 static CGFloat videoAspectRatio = 16/9;
 static BOOL isZoomedToFill = NO;
 static BOOL isEngagementPanelVisible = NO;
@@ -169,18 +169,22 @@ NSBundle *DEMC_getTweakBundle();
 %group DEMC_UnsupportedDevice
 
 // Get tweak settings' index path & prevent it from being opened on unsupported devices
+id settingsCollectionView;
 NSIndexPath *tweakIndexPath;
 %hook YTCollectionViewController
 - (id)collectionView:(id)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     YTSettingsCell *cell = %orig;
     if ([cell isKindOfClass:%c(YTSettingsCell)]) {
         YTLabel *title = [cell valueForKey:@"_titleLabel"];
-        if ([title.text isEqualToString:DEMC]) tweakIndexPath = indexPath;
+        if ([title.text isEqualToString:DEMC]) {
+            settingsCollectionView = collectionView;
+            tweakIndexPath = indexPath;
+        }
     }
     return cell;
 }
 - (BOOL)collectionView:(id)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	if (indexPath == tweakIndexPath) {
+	if (collectionView == settingsCollectionView && indexPath == tweakIndexPath) {
         NSBundle *bundle = DEMC_getTweakBundle();
         DEMC_showSnackBar(LOCALIZED_STRING(@"UNSUPPORTED_DEVICE"));
         return NO;
