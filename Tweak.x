@@ -5,8 +5,8 @@
 #define UNSUPPORTED_DEVICES @[@"iPhone14,3", @"iPhone14,6", @"iPhone14,8"]
 #define THRESHOLD 1.99
 
-static CGFloat videoAspectRatio = 16/9;
 CGFloat constant; // Make renderingView a bit larger since constraining to safe area leaves a gap between the notch and video
+static CGFloat videoAspectRatio = 16/9;
 static BOOL isZoomedToFill = NO;
 static BOOL isEngagementPanelVisible = NO;
 static BOOL isRemoveEngagementPanelViewControllerWithIdentifierCalled = NO;
@@ -172,20 +172,20 @@ NSBundle *DEMC_getTweakBundle();
 NSIndexPath *tweakIndexPath;
 %hook YTCollectionViewController
 - (id)collectionView:(id)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-	YTSettingsCell *cell = %orig;
-	if ([cell isKindOfClass:%c(YTSettingsCell)]) {
-		YTLabel *title = [cell valueForKey:@"_titleLabel"];
-		if ([title.text isEqualToString:DEMC]) tweakIndexPath = indexPath;
-	}
-	return cell;
+    YTSettingsCell *cell = %orig;
+    if ([cell isKindOfClass:%c(YTSettingsCell)]) {
+        YTLabel *title = [cell valueForKey:@"_titleLabel"];
+        if ([title.text isEqualToString:DEMC]) tweakIndexPath = indexPath;
+    }
+    return cell;
 }
 - (BOOL)collectionView:(id)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 	if (indexPath == tweakIndexPath) {
         NSBundle *bundle = DEMC_getTweakBundle();
-		DEMC_showSnackBar(LOCALIZED_STRING(@"UNSUPPORTED_DEVICE"));
-		return NO;
-	}
-	return %orig;
+        DEMC_showSnackBar(LOCALIZED_STRING(@"UNSUPPORTED_DEVICE"));
+        return NO;
+    }
+    return %orig;
 }
 %end
 
@@ -193,10 +193,10 @@ NSIndexPath *tweakIndexPath;
 
 %ctor {
     if (!DEMC_isDeviceSupported()) {
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:ENABLED_KEY];
-		%init(DEMC_UnsupportedDevice);
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:ENABLED_KEY];
+        %init(DEMC_UnsupportedDevice);
         return;
-	}
+    }
 
     constant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
     if (constant == 0) { // First launch probably
@@ -211,21 +211,21 @@ static BOOL DEMC_isDeviceSupported() {
     // https://stackoverflow.com/a/11197770/19227228
     struct utsname systemInfo;
     uname(&systemInfo);
-    NSString *deviceModelID = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    NSString *deviceModelId = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
 
-    NSArray *unsupportedModelIDs = UNSUPPORTED_DEVICES;
-    for (NSString *identifier in unsupportedModelIDs) {
-        if ([deviceModelID isEqualToString:identifier]) {
+    NSArray *unsupportedModelIds = UNSUPPORTED_DEVICES;
+    for (NSString *identifier in unsupportedModelIds) {
+        if ([deviceModelId isEqualToString:identifier]) {
             return NO;
         }
     }
 
-    if ([deviceModelID containsString:@"iPhone"]) {
-        if ([deviceModelID isEqualToString:@"iPhone13,1"]) {
+    if ([deviceModelId containsString:@"iPhone"]) {
+        if ([deviceModelId isEqualToString:@"iPhone13,1"]) {
             // iPhone 12 mini
             return YES;
         }
-        NSString *modelNumber = [[deviceModelID stringByReplacingOccurrencesOfString:@"iPhone" withString:@""] stringByReplacingOccurrencesOfString:@"," withString:@"."];
+        NSString *modelNumber = [[deviceModelId stringByReplacingOccurrencesOfString:@"iPhone" withString:@""] stringByReplacingOccurrencesOfString:@"," withString:@"."];
         if ([modelNumber floatValue] >= 14.0) {
             // iPhone 13 series and newer
             return YES;
@@ -256,20 +256,20 @@ static void DEMC_centerRenderingView() {
 }
 
 void DEMC_showSnackBar(NSString *text) {
-	YTHUDMessage *message = [%c(YTHUDMessage) messageWithText:text];
-	GOOHUDManagerInternal *manager = [%c(GOOHUDManagerInternal) sharedInstance];
-	[manager showMessageMainThread:message];
+    YTHUDMessage *message = [%c(YTHUDMessage) messageWithText:text];
+    GOOHUDManagerInternal *manager = [%c(GOOHUDManagerInternal) sharedInstance];
+    [manager showMessageMainThread:message];
 }
 
 NSBundle *DEMC_getTweakBundle() {
     static NSBundle *bundle = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^ {
-		NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"DontEatMyContent" ofType:@"bundle"];
-		if (bundlePath)
-			bundle = [NSBundle bundleWithPath:bundlePath];
-		else // Rootless
-			bundle = [NSBundle bundleWithPath:ROOT_PATH_NS(@"/Library/Application Support/DontEatMyContent.bundle")];
-	});
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"DontEatMyContent" ofType:@"bundle"];
+        if (bundlePath)
+            bundle = [NSBundle bundleWithPath:bundlePath];
+        else // Rootless
+            bundle = [NSBundle bundleWithPath:ROOT_PATH_NS(@"/Library/Application Support/DontEatMyContent.bundle")];
+    });
     return bundle;
 }

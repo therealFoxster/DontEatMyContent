@@ -43,43 +43,43 @@
 @property (nonatomic, copy, readwrite) NSString *text;
 @end
 
-@interface YTSettingsCell: UICollectionViewCell
+@interface YTSettingsCell : UICollectionViewCell
 @end
 
 @interface YTSettingsSectionItemManager : NSObject
 - (id)parentResponder;
 @end
 
-@interface YTSettingsPickerViewController: UIViewController
+@interface YTSettingsPickerViewController : UIViewController
 - (instancetype)initWithNavTitle:(NSString *)navTitle
-	pickerSectionTitle:(NSString *)pickerSectionTitle
-	rows:(NSArray *)rows
-	selectedItemIndex:(NSUInteger)selectedItemIndex
-	parentResponder:(id)parentResponder;
+    pickerSectionTitle:(NSString *)pickerSectionTitle
+    rows:(NSArray *)rows
+    selectedItemIndex:(NSUInteger)selectedItemIndex
+    parentResponder:(id)parentResponder;
 @end
 
 @interface YTSettingsSectionItem : NSObject
 + (instancetype)switchItemWithTitle:(NSString *)title
-	titleDescription:(NSString *)titleDescription
-	accessibilityIdentifier:(NSString *)accessibilityIdentifier
-	switchOn:(BOOL)switchOn
-	switchBlock:(BOOL (^)(YTSettingsCell *, BOOL))switchBlock
-	settingItemId:(int)settingItemId;
+    titleDescription:(NSString *)titleDescription
+    accessibilityIdentifier:(NSString *)accessibilityIdentifier
+    switchOn:(BOOL)switchOn
+    switchBlock:(BOOL (^)(YTSettingsCell *, BOOL))switchBlock
+    settingItemId:(int)settingItemId;
 + (instancetype)itemWithTitle:(NSString *)title
-	titleDescription:(NSString *)titleDescription
-	accessibilityIdentifier:(NSString *)accessibilityIdentifier
-	detailTextBlock:(id)detailTextBlock
-	selectBlock:(BOOL (^)(YTSettingsCell *, NSUInteger))selectBlock;
+    titleDescription:(NSString *)titleDescription
+    accessibilityIdentifier:(NSString *)accessibilityIdentifier
+    detailTextBlock:(id)detailTextBlock
+    selectBlock:(BOOL (^)(YTSettingsCell *, NSUInteger))selectBlock;
 + (instancetype)checkmarkItemWithTitle:(NSString *)title
-	selectBlock:(BOOL (^)(YTSettingsCell *, NSUInteger))selectBlock;
+    selectBlock:(BOOL (^)(YTSettingsCell *, NSUInteger))selectBlock;
 @end
 
 @interface YTSettingsViewController : UIViewController
 - (void)setSectionItems:(NSMutableArray <YTSettingsSectionItem *> *)sectionItems
-	forCategory:(NSInteger)category
-	title:(NSString *)title
-	titleDescription:(NSString *)titleDescription
-	headerHidden:(BOOL)headerHidden;
+    forCategory:(NSInteger)category
+    title:(NSString *)title
+    titleDescription:(NSString *)titleDescription
+    headerHidden:(BOOL)headerHidden;
 - (void)pushViewController:(UIViewController *)viewController;
 - (void)reloadData;
 @end
@@ -89,8 +89,8 @@
 @property (nonatomic, copy, readwrite) NSString *title;
 @property (nonatomic, copy, readwrite) NSString *subtitle;
 + (instancetype)confirmationDialogWithAction:(void (^)(void))action
-	actionTitle:(NSString *)actionTitle
-	cancelTitle:(NSString *)cancelTitle;
+    actionTitle:(NSString *)actionTitle
+    cancelTitle:(NSString *)cancelTitle;
 - (void)show;
 @end
 
