@@ -184,7 +184,7 @@ NSIndexPath *tweakIndexPath;
     return cell;
 }
 - (BOOL)collectionView:(id)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	if (collectionView == settingsCollectionView && indexPath == tweakIndexPath) {
+    if (collectionView == settingsCollectionView && indexPath == tweakIndexPath) {
         NSBundle *bundle = DEMC_getTweakBundle();
         DEMC_showSnackBar(LOCALIZED_STRING(@"UNSUPPORTED_DEVICE"));
         return NO;
