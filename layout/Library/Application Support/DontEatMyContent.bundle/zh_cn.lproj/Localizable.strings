@@ -1,0 +1,21 @@
+"ENABLED" = "启用";
+"TWEAK_DESC" = "改进部分机型的刘海区域或灵动岛在 2:1 比例视频中引发的遮挡问题。";
+
+"SAFE_AREA_CONST" =  "安全区数值";
+"SAFE_AREA_CONST_DESC" = "视频与刘海区域或灵动岛之间的距离。此数值越大，视频离刘海区域或灵动岛越远。";
+"DEFAULT" = "默认";
+"SAFE_AREA_CONST_MESSAGE" = "设置已保存，将在下次播放视频时生效";
+
+"COLOR_VIEWS" = "调试色块";
+"COLOR_VIEWS_DESC" = "用实色背景突出显示以下组件：渲染视图（rendering view）显示为红色，渲染视图容器（rendering view container）显示为绿色，播放器视图（player view）显示为蓝色。";
+
+"REPORT_ISSUE" = "问题反馈";
+"SOURCE_CODE" = "查看源码";
+
+"CHANGES_SAVED" = "设置已保存";
+
+"EXIT" = "立即重启";
+"LATER" = "稍后重启";
+"EXIT_YT_DESC" = "请重启 YouTube 来应用设置。";
+
+"UNSUPPORTED_DEVICE" = "当前机型不支持此插件（仅支持arm64e架构的机型）";
