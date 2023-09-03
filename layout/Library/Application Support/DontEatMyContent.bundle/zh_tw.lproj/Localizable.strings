@@ -1,21 +1,21 @@
-"ENABLED" = "Enabled";
-"TWEAK_DESC" = "Prevents the notch/Dynamic Island from cutting into 2:1 videos (e.g., MKBHD's videos)";
+"ENABLED" = "已啟用";
+"TWEAK_DESC" = "防止影片因為瀏海或動態島而被遮蔽（例如 MKBHD 的影片）";
 
-"SAFE_AREA_CONST" =  "Safe area constant";
-"SAFE_AREA_CONST_DESC" = "Customize this constant to push the video closer to or further away from the notch/Dynamic Island. The larger the constant, the closer the video will be to the notch/Dynamic Island, and vice versa";
-"DEFAULT" = "default";
-"SAFE_AREA_CONST_MESSAGE" = "Your changes were saved. If a video is currently playing, dismiss it for changes to take effect";
+"SAFE_AREA_CONST" =  "固定安全區域";
+"SAFE_AREA_CONST_DESC" = "設定全螢幕影片播放寬度";
+"DEFAULT" = "預設";
+"SAFE_AREA_CONST_MESSAGE" = "已儲存設定如果要套用設定請將目前播放的影片關閉";
 
-"COLOR_VIEWS" = "Colored views";
-"COLOR_VIEWS_DESC" = "Sets a red background for the rendering view, green for the rendering view container, and blue for the player view; useful for debugging";
+"COLOR_VIEWS" = "彩色區域";
+"COLOR_VIEWS_DESC" = "在播放器空白處顯示各種顏色：紅色為 rendering view 綠色為 rendering view container，藍色為播放器 view；在除錯時很好用";
 
-"REPORT_ISSUE" = "Report an issue";
-"SOURCE_CODE" = "View source code";
+"REPORT_ISSUE" = "回報錯誤";
+"SOURCE_CODE" = "檢視原始碼";
 
-"CHANGES_SAVED" = "Your changes were saved";
+"CHANGES_SAVED" = "已儲存設定";
 
-"EXIT" = "Exit";
-"LATER" = "Later";
-"EXIT_YT_DESC" = "Relaunch YouTube to apply changes";
+"EXIT" = "確認";
+"LATER" = "取消";
+"EXIT_YT_DESC" = "是否重新啟動YouTube來套用設定？";
 
-"UNSUPPORTED_DEVICE" = "This device is not supported";
+"UNSUPPORTED_DEVICE" = "不支援此裝置";
