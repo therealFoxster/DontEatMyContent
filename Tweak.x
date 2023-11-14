@@ -48,7 +48,7 @@ NSBundle *DEMC_getTweakBundle();
         renderingView.backgroundColor = [UIColor redColor];
     } else {
         playerView.backgroundColor = nil;
-        renderingViewContainer.backgroundColor = nil;
+        renderingViewContainer.backgroundColor = [UIColor blackColor];
         renderingView.backgroundColor = [UIColor blackColor];
     }
 
