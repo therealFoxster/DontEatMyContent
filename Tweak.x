@@ -109,7 +109,7 @@ NSBundle *DEMC_getTweakBundle();
         DEMC_activateConstraints();
     } else if (snapState == 1) { // Zoomed to fill
         isZoomedToFill = YES;
-        // No need to deactivate constraints as it's already done in -(void)didRecognizePinch:(UIPinchGestureRecognizer *)
+        DEMC_deactivateConstraints();
     }
     %orig(snapState);
 }
