@@ -1,0 +1,21 @@
+"ENABLED" = "Habilitado";
+"TWEAK_DESC" = "Evita que el Muesca/Isla dinámicacorte los vídeos 2:1 (por ejemplo, los vídeos de MKBHD)";
+
+"SAFE_AREA_CONST" =  "Zona segura constante";
+"SAFE_AREA_CONST_DESC" = "Personalice esta constante para acercar o alejar el vídeo de la Muesca/Isla dinámica. Cuanto mayor sea la constante, más cerca estará el vídeo de la Muesca/Isla dinámica, y viceversa.";
+"DEFAULT" = "por defecto";
+"SAFE_AREA_CONST_MESSAGE" = "Los cambios se han guardado. Si se está reproduciendo un vídeo, paralo para que los cambios surtan efecto.";
+
+"COLOR_VIEWS" = "Vistas coloreadas";
+"COLOR_VIEWS_DESC" = "Establece un fondo rojo para la vista de renderizado, verde para el contenedor de la vista de renderizado y azul para la vista del reproductor; útil para depuración.";
+
+"REPORT_ISSUE" = "Informar de un problema";
+"SOURCE_CODE" = "Ver código fuente";
+
+"CHANGES_SAVED" = "Tus cambios se han guardado";
+
+"EXIT" = "Salir";
+"LATER" = "Más tarde";
+"EXIT_YT_DESC" = "Reinicia YouTube para aplicar los cambios";
+
+"UNSUPPORTED_DEVICE" = "Este dispositivo no es compatible";
