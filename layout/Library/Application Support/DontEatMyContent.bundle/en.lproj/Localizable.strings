@@ -6,8 +6,8 @@
 "DEFAULT" = "default";
 "SAFE_AREA_CONST_MESSAGE" = "Your changes were saved. If a video is currently playing, dismiss it for changes to take effect";
 
-"COLOR_VIEWS" = "Colored views";
-"COLOR_VIEWS_DESC" = "Sets a red background for the rendering view, green for the rendering view container, and blue for the player view; useful for debugging";
+"COLOR_VIEWS" = "Color views for debugging";
+"COLOR_VIEWS_DESC" = "Sets a red background for the rendering view, green for the rendering view container, and blue for the player view";
 
 "REPORT_ISSUE" = "Report an issue";
 "SOURCE_CODE" = "View source code";
@@ -19,3 +19,9 @@
 "EXIT_YT_DESC" = "Relaunch YouTube to apply changes";
 
 "UNSUPPORTED_DEVICE" = "This device is not supported";
+
+"DISABLE_AMBIENT_MODE" = "Disable ambient mode in landscape";
+"VERSION" = "Version";
+
+"LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
+"LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";

@@ -42,6 +42,11 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         switchOn:IS_TWEAK_ENABLED
         switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
             [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:ENABLED_KEY];
+            
+            YTSettingsViewController *settingsViewController = [self valueForKey:@"_settingsViewControllerDelegate"];
+            [settingsViewController.navigationController popViewControllerAnimated:YES];
+            DEMC_showSnackBar(LOCALIZED_STRING(@"CHANGES_SAVED"));
+            return YES;
 
             YTAlertView *alert = [%c(YTAlertView) confirmationDialogWithAction:^
                 {
@@ -63,6 +68,20 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     ];
     [sectionItems addObject:enabled];
 
+    // Disable ambient mode
+    YTSettingsSectionItem *disableAmbientMode = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"DISABLE_AMBIENT_MODE")
+        titleDescription:nil
+        accessibilityIdentifier:nil
+        switchOn:IS_DISABLE_AMBIENT_MODE_ENABLED
+        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
+            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:DISABLE_AMBIENT_MODE_KEY];
+            DEMC_showSnackBar(LOCALIZED_STRING(@"CHANGES_SAVED"));
+            return YES;
+        }
+        settingItemId:0
+    ];
+    [sectionItems addObject:disableAmbientMode];
+
     // Safe area constant
     YTSettingsSectionItem *constraintConstant = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"SAFE_AREA_CONST")
         titleDescription:LOCALIZED_STRING(@"SAFE_AREA_CONST_DESC")
@@ -75,7 +94,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
             NSMutableArray *rows = [NSMutableArray array];
 
             float currentConstant = 20.0;
-            float storedConstant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];;
+            float storedConstant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
             UInt8 index = 0, selectedIndex = 0;
             while (currentConstant <= 25.0) {
                 NSString *title = [NSString stringWithFormat:@"%.1f", currentConstant];
@@ -134,15 +153,17 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     [sectionItems addObject:reportIssue];
 
     // View source code
-    YTSettingsSectionItem *sourceCode = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"SOURCE_CODE")
+    YTSettingsSectionItem *version = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"VERSION")
         titleDescription:nil
         accessibilityIdentifier:nil
-        detailTextBlock:nil
+        detailTextBlock:^NSString *() {
+            return VERSION;
+        }
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) {
-            return [%c(YTUIUtils) openURL:[NSURL URLWithString:@"https://github.com/therealFoxster/DontEatMyContent"]];
+            return [%c(YTUIUtils) openURL:[NSURL URLWithString:@"https://github.com/therealFoxster/DontEatMyContent/releases/"]];
         }
     ];
-    [sectionItems addObject:sourceCode];
+    [sectionItems addObject:version];
 
     [delegate setSectionItems:sectionItems 
         forCategory:sectionId 

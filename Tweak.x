@@ -2,7 +2,6 @@
 #import <rootless.h>
 #import "Tweak.h"
 
-#define UNSUPPORTED_DEVICES @[@"iPhone14,3", @"iPhone14,6", @"iPhone14,8"]
 #define THRESHOLD 1.99
 
 CGFloat constant; // Makes rendering view a bit larger since constraining to safe area leaves a gap between the notch/Dynamic Island and video
@@ -14,7 +13,6 @@ static BOOL isRemoveEngagementPanelViewControllerWithIdentifierCalled = NO;
 static MLHAMSBDLSampleBufferRenderingView *renderingView;
 static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
 
-static BOOL DEMC_isDeviceSupported();
 static void DEMC_activateConstraints();
 static void DEMC_deactivateConstraints();
 static void DEMC_centerRenderingView();
@@ -37,27 +35,35 @@ NSBundle *DEMC_getTweakBundle();
     UIView *renderingViewContainer = [playerView valueForKey:@"_renderingViewContainer"];
     renderingView = [playerView renderingView];
 
-    widthConstraint = [renderingView.widthAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.widthAnchor constant:constant];
-    heightConstraint = [renderingView.heightAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.heightAnchor constant:constant];
-    centerXConstraint = [renderingView.centerXAnchor constraintEqualToAnchor:renderingViewContainer.centerXAnchor];
-    centerYConstraint = [renderingView.centerYAnchor constraintEqualToAnchor:renderingViewContainer.centerYAnchor];
-
-    if (IS_COLOR_VIEWS_ENABLED) {
-        playerView.backgroundColor = [UIColor blueColor];
-        renderingViewContainer.backgroundColor = [UIColor greenColor];
-        renderingView.backgroundColor = [UIColor redColor];
-    } else {
-        playerView.backgroundColor = nil;
+    if (IS_DISABLE_AMBIENT_MODE_ENABLED) {
+        playerView.backgroundColor = [UIColor blackColor];;
         renderingViewContainer.backgroundColor = [UIColor blackColor];
         renderingView.backgroundColor = [UIColor blackColor];
     }
 
-    YTMainAppVideoPlayerOverlayViewController *activeVideoPlayerOverlay = [self activeVideoPlayerOverlay];
+    if (IS_TWEAK_ENABLED) {
+        widthConstraint = [renderingView.widthAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.widthAnchor constant:constant];
+        heightConstraint = [renderingView.heightAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.heightAnchor constant:constant];
+        centerXConstraint = [renderingView.centerXAnchor constraintEqualToAnchor:renderingViewContainer.centerXAnchor];
+        centerYConstraint = [renderingView.centerYAnchor constraintEqualToAnchor:renderingViewContainer.centerYAnchor];
 
-    // Must check class since YTInlineMutedPlaybackPlayerOverlayViewController doesn't have -(BOOL)isFullscreen
-    if ([activeVideoPlayerOverlay isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)] &&
-        [activeVideoPlayerOverlay isFullscreen] && !isZoomedToFill && !isEngagementPanelVisible)
-        DEMC_activateConstraints();
+        if (IS_COLOR_VIEWS_ENABLED) {
+            playerView.backgroundColor = [UIColor blueColor];
+            renderingViewContainer.backgroundColor = [UIColor greenColor];
+            renderingView.backgroundColor = [UIColor redColor];
+        } else if (!IS_DISABLE_AMBIENT_MODE_ENABLED) {
+            playerView.backgroundColor = [UIColor blackColor];
+            renderingViewContainer.backgroundColor = nil;
+            renderingView.backgroundColor = nil;
+        }
+
+        YTMainAppVideoPlayerOverlayViewController *activeVideoPlayerOverlay = [self activeVideoPlayerOverlay];
+
+        // Must check class since YTInlineMutedPlaybackPlayerOverlayViewController doesn't have -(BOOL)isFullscreen
+        if ([activeVideoPlayerOverlay isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)] &&
+            [activeVideoPlayerOverlay isFullscreen] && !isZoomedToFill && !isEngagementPanelVisible)
+            DEMC_activateConstraints();
+    }
 
     %orig(animated);
 }
@@ -166,78 +172,17 @@ NSBundle *DEMC_getTweakBundle();
 
 %end // group DEMC_Tweak
 
-%group DEMC_UnsupportedDevice
-
-// Get tweak settings' index path & prevent it from being opened on unsupported devices
-id settingsCollectionView;
-NSIndexPath *tweakIndexPath;
-%hook YTCollectionViewController
-- (id)collectionView:(id)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    YTSettingsCell *cell = %orig;
-    if ([cell isKindOfClass:%c(YTSettingsCell)]) {
-        YTLabel *title = [cell valueForKey:@"_titleLabel"];
-        if ([title.text isEqualToString:DEMC]) {
-            settingsCollectionView = collectionView;
-            tweakIndexPath = indexPath;
-        }
-    }
-    return cell;
-}
-- (BOOL)collectionView:(id)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (collectionView == settingsCollectionView && indexPath == tweakIndexPath) {
-        NSBundle *bundle = DEMC_getTweakBundle();
-        DEMC_showSnackBar(LOCALIZED_STRING(@"UNSUPPORTED_DEVICE"));
-        return NO;
-    }
-    return %orig;
-}
-%end
-
-%end // group DEMC_UnsupportedDevice
-
 %ctor {
-    if (!DEMC_isDeviceSupported()) {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:ENABLED_KEY];
-        %init(DEMC_UnsupportedDevice);
-        return;
-    }
-
     constant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
     if (constant == 0) { // First launch probably
         constant = DEFAULT_CONSTANT;
         [[NSUserDefaults standardUserDefaults] setFloat:constant forKey:SAFE_AREA_CONSTANT_KEY];
     }
-    if (IS_TWEAK_ENABLED) %init(DEMC_Tweak);
-}
-
-static BOOL DEMC_isDeviceSupported() {
-    // Get device model identifier (e.g. iPhone14,4)
-    // https://stackoverflow.com/a/11197770/19227228
-    struct utsname systemInfo;
-    uname(&systemInfo);
-    NSString *deviceModelId = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
-
-    NSArray *unsupportedModelIds = UNSUPPORTED_DEVICES;
-    for (NSString *identifier in unsupportedModelIds) {
-        if ([deviceModelId isEqualToString:identifier]) {
-            return NO;
-        }
-    }
-
-    if ([deviceModelId containsString:@"iPhone"]) {
-        if ([deviceModelId isEqualToString:@"iPhone13,1"]) {
-            // iPhone 12 mini
-            return YES;
-        }
-        NSString *modelNumber = [[deviceModelId stringByReplacingOccurrencesOfString:@"iPhone" withString:@""] stringByReplacingOccurrencesOfString:@"," withString:@"."];
-        if ([modelNumber floatValue] >= 14.0) {
-            // iPhone 13 series and newer
-            return YES;
-        } else return NO;
-    } else return NO;
+    %init(DEMC_Tweak);
 }
 
 static void DEMC_activateConstraints() {
+    if (!IS_TWEAK_ENABLED) return;
     if (videoAspectRatio < THRESHOLD) {
         DEMC_deactivateConstraints();
         return;
@@ -250,6 +195,7 @@ static void DEMC_activateConstraints() {
 }
 
 static void DEMC_deactivateConstraints() {
+    if (!IS_TWEAK_ENABLED) return;
     // NSLog(@"deactivate");
     renderingView.translatesAutoresizingMaskIntoConstraints = YES;
 }
