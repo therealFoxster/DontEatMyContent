@@ -9,9 +9,7 @@ Prevent the notch/Dynamic Island from munching on 2:1 video content in YouTube
 The rendering view is constrained to the safe area layout guide of its container so it will always be below the notch and Dynamic Island. These constraints are only activated for videos with 2:1 aspect ratio or wider to prevent unintended effects on videos with smaller aspect ratios. 
 
 ## Compatibility
-Supports iPhone 12 mini and iPhone 13 or newer **EXCEPT** iPhone SE 3rd generation, iPhone 13 Pro Max, and iPhone 14 Plus.
-
-> **Note**: From [v1.0.4](https://github.com/therealFoxster/DontEatMyContent/releases/tag/v1.0.4) onwards, the tweak only supports YouTube versions that got the [October 2022 redesign](https://blog.youtube/news-and-events/an-updated-look-and-feel-for-youtube/). v1.0.4 was tested and confirmed to be working with YouTube v17.43.1.
+Runs on all devices on iOS/iPadOS 14.0 or later, though I wouldn't recommend enabling the tweak if the notch doesn't cut into your videos.
 
 ## Grab it
 - IPA file: https://therealfoxster.github.io/altsource-viewer/app?source=https://therealfoxster.github.io/altsource/apps.json&id=com.google.ios.youtube
