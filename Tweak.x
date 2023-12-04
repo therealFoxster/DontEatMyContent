@@ -2,7 +2,7 @@
 #import <rootless.h>
 #import "Tweak.h"
 
-#define THRESHOLD 1.99
+#define THRESHOLD 1.97
 
 CGFloat constant; // Makes rendering view a bit larger since constraining to safe area leaves a gap between the notch/Dynamic Island and video
 static CGFloat videoAspectRatio = 16/9;
