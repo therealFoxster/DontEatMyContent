@@ -4,7 +4,7 @@
 "SAFE_AREA_CONST" =  "Safe area constant";
 "SAFE_AREA_CONST_DESC" = "Customize this constant to push the video closer to or further away from the notch/Dynamic Island. The larger the constant, the closer the video will be to the notch/Dynamic Island, and vice versa";
 "DEFAULT" = "default";
-"SAFE_AREA_CONST_MESSAGE" = "Your changes were saved. If a video is currently playing, dismiss it for changes to take effect";
+"CHANGES_SAVED_DISMISS_VIDEO" = "Your changes were saved. If a video is currently playing, dismiss it for changes to take effect";
 
 "COLOR_VIEWS" = "Color views for debugging";
 "COLOR_VIEWS_DESC" = "Sets a red background for the rendering view, green for the rendering view container, and blue for the player view";
@@ -25,3 +25,10 @@
 
 "LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
 "LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";
+
+"ADD_TITLE" = "Add your title here...";
+
+"ADVANCED" = "Advanced";
+
+"ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";

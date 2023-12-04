@@ -4,7 +4,7 @@
 "SAFE_AREA_CONST" =  "Güvenli alan sabiti";
 "SAFE_AREA_CONST_DESC" = "Videoyu çentiğe/Dinamik Ada'ya yaklaştırmak veya uzaklaştırmak için bu sabiti özelleştir. Sabit ne kadar büyük olursa video çentik/Dinamik Ada'ya o kadar yakın olur ve bunun tersi de geçerlidir.";
 "DEFAULT" = "Varsayılan";
-"SAFE_AREA_CONST_MESSAGE" = "Değişiklikler kaydedildi. Şu anda bir video oynatılıyorsa, değişikliklerin geçerli olması için kapat";
+"CHANGES_SAVED_DISMISS_VIDEO" = "Değişiklikler kaydedildi. Şu anda bir video oynatılıyorsa, değişikliklerin geçerli olması için kapat";
 
 "COLOR_VIEWS" = "Renkli görünümler";
 "COLOR_VIEWS_DESC" = "İşleme görünümü için kırmızı, işleme görünümü kabı için yeşil ve oynatıcı görünümü için mavi bir arka plan ayarlar; hata ayıklama için yararlı";
@@ -19,3 +19,16 @@
 "EXIT_YT_DESC" = "Değişiklikleri uygulamak için YouTube'u yeniden başlat";
 
 "UNSUPPORTED_DEVICE" = "Bu cihaz uyumlu değil";
+
+"DISABLE_AMBIENT_MODE" = "Disable ambient mode in landscape";
+"VERSION" = "Version";
+
+"LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
+"LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";
+
+"ADD_TITLE" = "Add your title here...";
+
+"ADVANCED" = "Advanced";
+
+"ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";

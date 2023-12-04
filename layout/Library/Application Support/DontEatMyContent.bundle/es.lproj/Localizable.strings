@@ -4,7 +4,7 @@
 "SAFE_AREA_CONST" =  "Zona segura constante";
 "SAFE_AREA_CONST_DESC" = "Personalice esta constante para acercar o alejar el vídeo de la Muesca/Isla dinámica. Cuanto mayor sea la constante, más cerca estará el vídeo de la Muesca/Isla dinámica, y viceversa.";
 "DEFAULT" = "por defecto";
-"SAFE_AREA_CONST_MESSAGE" = "Los cambios se han guardado. Si se está reproduciendo un vídeo, paralo para que los cambios surtan efecto.";
+"CHANGES_SAVED_DISMISS_VIDEO" = "Los cambios se han guardado. Si se está reproduciendo un vídeo, paralo para que los cambios surtan efecto.";
 
 "COLOR_VIEWS" = "Vistas coloreadas";
 "COLOR_VIEWS_DESC" = "Establece un fondo rojo para la vista de renderizado, verde para el contenedor de la vista de renderizado y azul para la vista del reproductor; útil para depuración.";
@@ -19,3 +19,16 @@
 "EXIT_YT_DESC" = "Reinicia YouTube para aplicar los cambios";
 
 "UNSUPPORTED_DEVICE" = "Este dispositivo no es compatible";
+
+"DISABLE_AMBIENT_MODE" = "Disable ambient mode in landscape";
+"VERSION" = "Version";
+
+"LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
+"LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";
+
+"ADD_TITLE" = "Add your title here...";
+
+"ADVANCED" = "Advanced";
+
+"ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";

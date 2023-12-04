@@ -4,7 +4,7 @@
 "SAFE_AREA_CONST" =  "安全区数值";
 "SAFE_AREA_CONST_DESC" = "视频与刘海区域或灵动岛之间的距离。此数值越大，视频离刘海区域或灵动岛越远。";
 "DEFAULT" = "默认";
-"SAFE_AREA_CONST_MESSAGE" = "设置已保存，将在下次播放视频时生效";
+"CHANGES_SAVED_DISMISS_VIDEO" = "设置已保存，将在下次播放视频时生效";
 
 "COLOR_VIEWS" = "调试色块";
 "COLOR_VIEWS_DESC" = "用实色背景突出显示以下组件：渲染视图（rendering view）显示为红色，渲染视图容器（rendering view container）显示为绿色，播放器视图（player view）显示为蓝色。";
@@ -19,3 +19,16 @@
 "EXIT_YT_DESC" = "请重启 YouTube 来应用设置。";
 
 "UNSUPPORTED_DEVICE" = "当前机型不支持此插件（仅支持arm64e架构的机型）";
+
+"DISABLE_AMBIENT_MODE" = "Disable ambient mode in landscape";
+"VERSION" = "Version";
+
+"LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
+"LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";
+
+"ADD_TITLE" = "Add your title here...";
+
+"ADVANCED" = "Advanced";
+
+"ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";

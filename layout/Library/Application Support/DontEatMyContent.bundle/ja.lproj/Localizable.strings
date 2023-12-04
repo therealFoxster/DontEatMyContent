@@ -4,7 +4,7 @@
 "SAFE_AREA_CONST" =  "安全領域の定数";
 "SAFE_AREA_CONST_DESC" = "この定数をカスタマイズして、動画をノッチやダイナミックアイランドからより近づけるかより離れさせることができます。定数が大きいほど動画はノッチやダイナミックアイランドに近くなります。逆に、定数が小さいほど動画はより遠くに配置されます。";
 "DEFAULT" = "デフォルト";
-"SAFE_AREA_CONST_MESSAGE" = "変更が保存されました。動画を再生中の場合、変更を反映させるために動画を閉じてください。";
+"CHANGES_SAVED_DISMISS_VIDEO" = "変更が保存されました。動画を再生中の場合、変更を反映させるために動画を閉じてください。";
 
 "COLOR_VIEWS" = "カラー付きビュー";
 "COLOR_VIEWS_DESC" = "レンダリングビューには赤い背景を、レンダリングビューコンテナには緑を、プレーヤービューには青を設定します。デバッグに便利です。";
@@ -19,3 +19,16 @@
 "EXIT_YT_DESC" = "変更を適用するためにYouTubeを再起動します";
 
 "UNSUPPORTED_DEVICE" = "このデバイスはサポートされていません";
+
+"DISABLE_AMBIENT_MODE" = "Disable ambient mode in landscape";
+"VERSION" = "Version";
+
+"LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
+"LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";
+
+"ADD_TITLE" = "Add your title here...";
+
+"ADVANCED" = "Advanced";
+
+"ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";
