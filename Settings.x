@@ -91,8 +91,9 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         }
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) {
             __block YTSettingsViewController *settingsViewController = [self valueForKey:@"_settingsViewControllerDelegate"];
+            
+            // Create rows
             NSMutableArray *rows = [NSMutableArray array];
-
             float currentConstant = 20.0;
             float storedConstant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
             UInt8 index = 0, selectedIndex = 0;
@@ -107,7 +108,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
                         [[NSUserDefaults standardUserDefaults] setFloat:currentConstant forKey:SAFE_AREA_CONSTANT_KEY];
                         constant = currentConstant;
                         [settingsViewController reloadData]; // Refresh section's detail text (constant)
-                        DEMC_showSnackBar(LOCALIZED_STRING(@"SAFE_AREA_CONST_MESSAGE"));
+                        DEMC_showSnackBar(LOCALIZED_STRING(@"CHANGES_SAVED_DISMISS_VIDEO"));
                         return YES;
                     }
                 ]];
@@ -141,13 +142,28 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     ];
     if (IS_TWEAK_ENABLED) [sectionItems addObject:colorViews];
 
+    // Enable for all videos
+    YTSettingsSectionItem *enableForAllVideos = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS")
+        titleDescription:LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS_DESC")
+        accessibilityIdentifier:nil
+        switchOn:IS_ENABLE_FOR_ALL_VIDEOS_ENABLED
+        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
+            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:ENABLE_FOR_ALL_VIDEOS_KEY];
+            DEMC_showSnackBar(LOCALIZED_STRING(@"CHANGES_SAVED"));
+            return YES;
+        }
+        settingItemId:0
+    ];
+    if (IS_TWEAK_ENABLED) [sectionItems addObject:enableForAllVideos];
+
     // Report an issue
     YTSettingsSectionItem *reportIssue = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"REPORT_ISSUE")
         titleDescription:nil
         accessibilityIdentifier:nil
         detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) {
-            return [%c(YTUIUtils) openURL:[NSURL URLWithString:@"https://github.com/therealFoxster/DontEatMyContent/issues/new"]];
+            NSString *url = [NSString stringWithFormat:@"https://github.com/therealFoxster/DontEatMyContent/issues/new/?title=[v%@] %@", VERSION, LOCALIZED_STRING(@"ADD_TITLE")];
+            return [%c(YTUIUtils) openURL:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]]];
         }
     ];
     [sectionItems addObject:reportIssue];

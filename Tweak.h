@@ -1,7 +1,7 @@
 #import <UIKit/UIKit.h>
 
 #define DEMC @"DontEatMyContent"
-#define VERSION @"1.1.0"
+#define VERSION @"1.1.1"
 
 // Keys
 #define ENABLED_KEY @"DEMC_enabled"
@@ -9,12 +9,14 @@
 #define SAFE_AREA_CONSTANT_KEY @"DEMC_safeAreaConstant"
 #define DISABLE_AMBIENT_MODE_KEY @"DEMC_disableAmbientMode"
 #define LIMIT_ZOOM_TO_FILL_KEY @"DEMC_limitZoomToFill"
+#define ENABLE_FOR_ALL_VIDEOS_KEY @"DEMC_enableForAllVideos"
 
 #define DEFAULT_CONSTANT 22.0
 #define IS_TWEAK_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:ENABLED_KEY]
 #define IS_COLOR_VIEWS_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:COLOR_VIEWS_ENABLED_KEY]
 #define IS_DISABLE_AMBIENT_MODE_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:DISABLE_AMBIENT_MODE_KEY]
 #define IS_LIMIT_ZOOM_TO_FILL_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:LIMIT_ZOOM_TO_FILL_KEY]
+#define IS_ENABLE_FOR_ALL_VIDEOS_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:ENABLE_FOR_ALL_VIDEOS_KEY]
 #define LOCALIZED_STRING(s) [bundle localizedStringForKey:s value:nil table:nil]
 
 @interface YTPlayerViewController : UIViewController
@@ -90,6 +92,8 @@
     headerHidden:(BOOL)headerHidden;
 - (void)pushViewController:(UIViewController *)viewController;
 - (void)reloadData;
+- (id)accountID;
+- (id)initWithAccountID:(id)accountID parentResponder:(id)parentResponder;
 @end
 
 // Alert

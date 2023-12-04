@@ -39,6 +39,10 @@ NSBundle *DEMC_getTweakBundle();
         playerView.backgroundColor = [UIColor blackColor];;
         renderingViewContainer.backgroundColor = [UIColor blackColor];
         renderingView.backgroundColor = [UIColor blackColor];
+    } else {
+        playerView.backgroundColor = [UIColor blackColor];
+        renderingViewContainer.backgroundColor = nil;
+        renderingView.backgroundColor = nil;
     }
 
     if (IS_TWEAK_ENABLED) {
@@ -51,10 +55,6 @@ NSBundle *DEMC_getTweakBundle();
             playerView.backgroundColor = [UIColor blueColor];
             renderingViewContainer.backgroundColor = [UIColor greenColor];
             renderingView.backgroundColor = [UIColor redColor];
-        } else if (!IS_DISABLE_AMBIENT_MODE_ENABLED) {
-            playerView.backgroundColor = [UIColor blackColor];
-            renderingViewContainer.backgroundColor = nil;
-            renderingView.backgroundColor = nil;
         }
 
         YTMainAppVideoPlayerOverlayViewController *activeVideoPlayerOverlay = [self activeVideoPlayerOverlay];
@@ -183,7 +183,7 @@ NSBundle *DEMC_getTweakBundle();
 
 static void DEMC_activateConstraints() {
     if (!IS_TWEAK_ENABLED) return;
-    if (videoAspectRatio < THRESHOLD) {
+    if (videoAspectRatio < THRESHOLD && !IS_ENABLE_FOR_ALL_VIDEOS_ENABLED) {
         DEMC_deactivateConstraints();
         return;
     }
