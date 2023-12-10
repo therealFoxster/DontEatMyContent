@@ -18,7 +18,7 @@
 "LATER" = "稍后重启";
 "EXIT_YT_DESC" = "请重启 YouTube 来应用设置。";
 
-"UNSUPPORTED_DEVICE" = "当前机型不支持此插件（仅支持arm64e架构的机型）";
+"UNSUPPORTED_DEVICE" = "当前机型不支持此插件（仅支持arm64架构的机型）";
 
 "DISABLE_AMBIENT_MODE" = "禁用全屏氛围模式";
 "VERSION" = "版本";
