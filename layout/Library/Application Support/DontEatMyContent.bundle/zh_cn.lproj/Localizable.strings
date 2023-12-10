@@ -20,15 +20,15 @@
 
 "UNSUPPORTED_DEVICE" = "当前机型不支持此插件（仅支持arm64e架构的机型）";
 
-"DISABLE_AMBIENT_MODE" = "Disable ambient mode in landscape";
-"VERSION" = "Version";
+"DISABLE_AMBIENT_MODE" = "禁用全屏氛围模式";
+"VERSION" = "版本";
 
-"LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
-"LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";
+"LIMIT_ZOOM_TO_FILL" = "拉伸至安全区（测试功能）";
+"LIMIT_ZOOM_TO_FILL_DESC" = "启用后，使用“拉伸至全屏”时内容边界将不会越过刘海区域或灵动岛。";
 
-"ADD_TITLE" = "Add your title here...";
+"ADD_TITLE" = "请在此处添加标题…";
 
-"ADVANCED" = "Advanced";
+"ADVANCED" = "高级";
 
-"ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
-"ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";
+"ENABLE_FOR_ALL_VIDEOS" = "为所有视频启用（测试功能）";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "将安全区数值应用于所有视频。启用后可能会出现非预期结果。启用前请先反馈问题。";
