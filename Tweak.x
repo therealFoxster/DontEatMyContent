@@ -102,7 +102,7 @@ NSBundle *DEMC_getTweakBundle();
 }
 %end
 
-// Pinch to zoom
+// This hook will be used if pinch to zoom is available
 %hook YTVideoFreeZoomOverlayView
 - (void)didRecognizePinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
     DEMC_deactivateConstraints();
@@ -115,7 +115,27 @@ NSBundle *DEMC_getTweakBundle();
         DEMC_activateConstraints();
     } else if (snapState == 1) { // Zoomed to fill
         isZoomedToFill = YES;
+        // No need to deactivate constraints as it's already done in -(void)didRecognizePinch:(UIPinchGestureRecognizer *)
+    }
+    %orig(snapState);
+}
+%end
+
+// This hook will be used if pinch to zoom is unavailable
+%hook YTVideoZoomOverlayView
+- (void)didRecognizePinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
+    DEMC_deactivateConstraints();
+    %orig(pinchGestureRecognizer);
+}
+// Detect zoom to fill
+- (void)showLabelForSnapState:(NSInteger)snapState {
+    if (snapState == 0) { // Original
+        isZoomedToFill = NO;
+        DEMC_activateConstraints();
+    } else if (snapState == 1) { // Zoomed to fill
+        isZoomedToFill = YES;
         DEMC_deactivateConstraints();
+        // No need to deactivate constraints as it's already done in -(void)didRecognizePinch:(UIPinchGestureRecognizer *)
     }
     %orig(snapState);
 }
