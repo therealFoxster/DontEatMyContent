@@ -12,7 +12,7 @@ The rendering view is constrained to the safe area layout guide of its container
 Runs on all devices on iOS/iPadOS 14.0 or later, though I wouldn't recommend enabling the tweak if the notch doesn't cut into your videos.
 
 ## Grab it
-- IPA file: https://therealfoxster.github.io/altsource-viewer/app?source=https://therealfoxster.github.io/altsource/apps.json&id=com.google.ios.youtube
+- IPA file: https://therealfoxster.github.io/altsource-viewer/view/app/?source=https://therealfoxster.github.io/altsource/apps.json&id=com.google.ios.youtube
 - DEB file: https://github.com/therealFoxster/DontEatMyContent/releases/latest
 
 ## Preview - iPhone 15 Pro
