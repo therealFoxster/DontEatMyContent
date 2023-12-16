@@ -36,7 +36,8 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     NSBundle *bundle = DEMC_getTweakBundle();
 
     // Enabled
-    YTSettingsSectionItem *enabled = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"ENABLED")
+    YTSettingsSectionItem *enabled = [%c(YTSettingsSectionItem)
+        switchItemWithTitle:LOCALIZED_STRING(@"ENABLED")
         titleDescription:LOCALIZED_STRING(@"TWEAK_DESC")
         accessibilityIdentifier:nil
         switchOn:IS_TWEAK_ENABLED
@@ -69,7 +70,8 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     [sectionItems addObject:enabled];
 
     // Disable ambient mode
-    YTSettingsSectionItem *disableAmbientMode = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"DISABLE_AMBIENT_MODE")
+    YTSettingsSectionItem *disableAmbientMode = [%c(YTSettingsSectionItem)
+        switchItemWithTitle:LOCALIZED_STRING(@"DISABLE_AMBIENT_MODE")
         titleDescription:nil
         accessibilityIdentifier:nil
         switchOn:IS_DISABLE_AMBIENT_MODE_ENABLED
@@ -83,7 +85,8 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     [sectionItems addObject:disableAmbientMode];
 
     // Safe area constant
-    YTSettingsSectionItem *constraintConstant = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"SAFE_AREA_CONST")
+    YTSettingsSectionItem *constraintConstant = [%c(YTSettingsSectionItem)
+        itemWithTitle:LOCALIZED_STRING(@"SAFE_AREA_CONST")
         titleDescription:LOCALIZED_STRING(@"SAFE_AREA_CONST_DESC")
         accessibilityIdentifier:nil
         detailTextBlock:^NSString *() {
@@ -129,7 +132,8 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     if (IS_TWEAK_ENABLED) [sectionItems addObject:constraintConstant];
 
     // Color views
-    YTSettingsSectionItem *colorViews = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"COLOR_VIEWS")
+    YTSettingsSectionItem *colorViews = [%c(YTSettingsSectionItem)
+        switchItemWithTitle:LOCALIZED_STRING(@"COLOR_VIEWS")
         titleDescription:LOCALIZED_STRING(@"COLOR_VIEWS_DESC")
         accessibilityIdentifier:nil
         switchOn:IS_COLOR_VIEWS_ENABLED
@@ -143,7 +147,8 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     if (IS_TWEAK_ENABLED) [sectionItems addObject:colorViews];
 
     // Enable for all videos
-    YTSettingsSectionItem *enableForAllVideos = [%c(YTSettingsSectionItem) switchItemWithTitle:LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS")
+    YTSettingsSectionItem *enableForAllVideos = [%c(YTSettingsSectionItem)
+        switchItemWithTitle:LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS")
         titleDescription:LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS_DESC")
         accessibilityIdentifier:nil
         switchOn:IS_ENABLE_FOR_ALL_VIDEOS_ENABLED
@@ -157,7 +162,8 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     if (IS_TWEAK_ENABLED) [sectionItems addObject:enableForAllVideos];
 
     // Report an issue
-    YTSettingsSectionItem *reportIssue = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"REPORT_ISSUE")
+    YTSettingsSectionItem *reportIssue = [%c(YTSettingsSectionItem)
+        itemWithTitle:LOCALIZED_STRING(@"REPORT_ISSUE")
         titleDescription:nil
         accessibilityIdentifier:nil
         detailTextBlock:nil
@@ -169,7 +175,8 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     [sectionItems addObject:reportIssue];
 
     // View source code
-    YTSettingsSectionItem *version = [%c(YTSettingsSectionItem) itemWithTitle:LOCALIZED_STRING(@"VERSION")
+    YTSettingsSectionItem *version = [%c(YTSettingsSectionItem)
+        itemWithTitle:LOCALIZED_STRING(@"VERSION")
         titleDescription:nil
         accessibilityIdentifier:nil
         detailTextBlock:^NSString *() {
