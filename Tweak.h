@@ -1,7 +1,7 @@
 #import <UIKit/UIKit.h>
 
 #define DEMC @"DontEatMyContent"
-#define VERSION @"1.1.2"
+#define VERSION @"1.1.3"
 
 // Keys
 #define ENABLED_KEY @"DEMC_enabled"
