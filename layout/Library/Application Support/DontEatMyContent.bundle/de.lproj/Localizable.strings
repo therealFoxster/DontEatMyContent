@@ -32,3 +32,5 @@
 
 "ENABLE_FOR_ALL_VIDEOS" = "Aktivieren für alle Videos (experimentell)";
 "ENABLE_FOR_ALL_VIDEOS_DESC" = "Aktivieren Sie die Einschränkung des sicheren Bereichs für alle Videos. Dies kann zu unbeabsichtigten Effekten führen. Bitte melden Sie einen Fehler, bevor Sie diese Option aktivieren.";
+
+"ABOUT" = "About";

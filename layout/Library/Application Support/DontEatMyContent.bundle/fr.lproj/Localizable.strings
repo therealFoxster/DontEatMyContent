@@ -32,3 +32,5 @@
 
 "ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
 "ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";
+
+"ABOUT" = "About";

@@ -32,3 +32,5 @@
 
 "ENABLE_FOR_ALL_VIDEOS" = "为所有视频启用（测试功能）";
 "ENABLE_FOR_ALL_VIDEOS_DESC" = "将安全区数值应用于所有视频。启用后可能会出现非预期结果。启用前请先反馈问题。";
+
+"ABOUT" = "About";
