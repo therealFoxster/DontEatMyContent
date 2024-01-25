@@ -12,6 +12,7 @@
 #define ENABLE_FOR_ALL_VIDEOS_KEY @"DEMC_enableForAllVideos"
 
 #define DEFAULT_CONSTANT 21.5
+#define IS_ENABLED(k) [[NSUserDefaults standardUserDefaults] boolForKey:k]
 #define IS_TWEAK_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:ENABLED_KEY]
 #define IS_COLOR_VIEWS_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:COLOR_VIEWS_ENABLED_KEY]
 #define IS_DISABLE_AMBIENT_MODE_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:DISABLE_AMBIENT_MODE_KEY]
@@ -88,6 +89,12 @@
 - (void)setSectionItems:(NSMutableArray <YTSettingsSectionItem *> *)sectionItems
     forCategory:(NSInteger)category
     title:(NSString *)title
+    titleDescription:(NSString *)titleDescription
+    headerHidden:(BOOL)headerHidden;
+- (void)setSectionItems:(NSMutableArray <YTSettingsSectionItem *> *)sectionItems
+    forCategory:(NSInteger)category
+    title:(NSString *)title
+    icon:(id)icon
     titleDescription:(NSString *)titleDescription
     headerHidden:(BOOL)headerHidden;
 - (void)pushViewController:(UIViewController *)viewController;
