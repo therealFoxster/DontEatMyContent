@@ -4,20 +4,15 @@
 #define VERSION @"1.1.3"
 
 // Keys
-#define ENABLED_KEY @"DEMC_enabled"
-#define COLOR_VIEWS_ENABLED_KEY @"DEMC_colorViewsEnabled"
-#define SAFE_AREA_CONSTANT_KEY @"DEMC_safeAreaConstant"
-#define DISABLE_AMBIENT_MODE_KEY @"DEMC_disableAmbientMode"
-#define LIMIT_ZOOM_TO_FILL_KEY @"DEMC_limitZoomToFill"
-#define ENABLE_FOR_ALL_VIDEOS_KEY @"DEMC_enableForAllVideos"
+#define kTweak @"DEMC_enabled"
+#define kColorViews @"DEMC_colorViewsEnabled"
+#define kSafeAreaConstant @"DEMC_safeAreaConstant"
+#define kDisableAmbientMode @"DEMC_disableAmbientMode"
+#define kLimitZoomToFill @"DEMC_limitZoomToFill"
+#define kEnableForAllVideos @"DEMC_enableForAllVideos"
 
 #define DEFAULT_CONSTANT 21.5
 #define IS_ENABLED(k) [[NSUserDefaults standardUserDefaults] boolForKey:k]
-#define IS_TWEAK_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:ENABLED_KEY]
-#define IS_COLOR_VIEWS_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:COLOR_VIEWS_ENABLED_KEY]
-#define IS_DISABLE_AMBIENT_MODE_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:DISABLE_AMBIENT_MODE_KEY]
-#define IS_LIMIT_ZOOM_TO_FILL_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:LIMIT_ZOOM_TO_FILL_KEY]
-#define IS_ENABLE_FOR_ALL_VIDEOS_ENABLED [[NSUserDefaults standardUserDefaults] boolForKey:ENABLE_FOR_ALL_VIDEOS_KEY]
 #define LOCALIZED_STRING(s) [bundle localizedStringForKey:s value:nil table:nil]
 
 @interface YTPlayerViewController : UIViewController
@@ -59,6 +54,11 @@
 
 @interface YTSettingsSectionItemManager : NSObject
 - (id)parentResponder;
+@end
+
+// Category for additional functions
+@interface YTSettingsSectionItemManager (DontEatMyContent)
+- (void)updateDEMCSectionWithEntry:(id)entry;
 @end
 
 @interface YTSettingsPickerViewController : UIViewController

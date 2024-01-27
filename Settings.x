@@ -5,7 +5,6 @@
 // https://github.com/qnblackcat/uYouPlus/blob/265927b3900d886e2085d05bfad7cd4157be87d2/Settings.xm
 
 #define SECTION_HEADER(s) [sectionItems addObject:[%c(YTSettingsSectionItem) itemWithTitle:@"\t" titleDescription:[s uppercaseString] accessibilityIdentifier:nil detailTextBlock:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) { return NO; }]]
-
 #define SWITCH_ITEM(t, d, k) [sectionItems addObject:[%c(YTSettingsSectionItem) switchItemWithTitle:t titleDescription:d accessibilityIdentifier:nil switchOn:IS_ENABLED(k) switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {[[NSUserDefaults standardUserDefaults] setBool:enabled forKey:k];DEMC_showSnackBar(LOCALIZED_STRING(@"CHANGES_SAVED"));return YES;} settingItemId:0]]
 
 extern void DEMC_showSnackBar(NSString *text);
@@ -13,13 +12,6 @@ extern NSBundle *DEMC_getTweakBundle();
 extern CGFloat constant;
 
 static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a random number)
-
-// Category for additional functions
-@interface YTSettingsSectionItemManager (_DEMC)
-- (void)updateDEMCSectionWithEntry:(id)entry;
-@end
-
-%group DEMC_Settings
 
 %hook YTAppSettingsPresentationData
 + (NSArray *)settingsCategoryOrder {
@@ -44,9 +36,9 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         switchItemWithTitle:LOCALIZED_STRING(@"ENABLED")
         titleDescription:LOCALIZED_STRING(@"TWEAK_DESC")
         accessibilityIdentifier:nil
-        switchOn:IS_TWEAK_ENABLED
+        switchOn:IS_ENABLED(kTweak)
         switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
-            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:ENABLED_KEY];
+            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kTweak];
             
             YTSettingsViewController *settingsViewController = [self valueForKey:@"_settingsViewControllerDelegate"];
             [settingsViewController.navigationController popViewControllerAnimated:YES];
@@ -73,9 +65,9 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     ]];
 
     // Disable ambient mode
-    SWITCH_ITEM(LOCALIZED_STRING(@"DISABLE_AMBIENT_MODE"), nil, DISABLE_AMBIENT_MODE_KEY);
+    SWITCH_ITEM(LOCALIZED_STRING(@"DISABLE_AMBIENT_MODE"), nil, kDisableAmbientMode);
 
-    if (IS_TWEAK_ENABLED) {
+    if (IS_ENABLED(kTweak)) {
         SECTION_HEADER(LOCALIZED_STRING(@"ADVANCED"));
 
         // Safe area constant
@@ -92,7 +84,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
                 // Create rows
                 NSMutableArray *rows = [NSMutableArray array];
                 float currentConstant = 20.0;
-                float storedConstant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
+                float storedConstant = [[NSUserDefaults standardUserDefaults] floatForKey:kSafeAreaConstant];
                 UInt8 index = 0, selectedIndex = 0;
                 while (currentConstant <= 25.0) {
                     NSString *title = [NSString stringWithFormat:@"%.1f", currentConstant];
@@ -102,7 +94,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
                         selectedIndex = index;
                     [rows addObject:[%c(YTSettingsSectionItem) checkmarkItemWithTitle:title
                         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) {
-                            [[NSUserDefaults standardUserDefaults] setFloat:currentConstant forKey:SAFE_AREA_CONSTANT_KEY];
+                            [[NSUserDefaults standardUserDefaults] setFloat:currentConstant forKey:kSafeAreaConstant];
                             constant = currentConstant;
                             [settingsViewController reloadData]; // Refresh section's detail text (constant)
                             DEMC_showSnackBar(LOCALIZED_STRING(@"CHANGES_SAVED_DISMISS_VIDEO"));
@@ -125,10 +117,10 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         ]];
         
         // Color views
-        SWITCH_ITEM(LOCALIZED_STRING(@"COLOR_VIEWS"), LOCALIZED_STRING(@"COLOR_VIEWS_DESC"), COLOR_VIEWS_ENABLED_KEY);
+        SWITCH_ITEM(LOCALIZED_STRING(@"COLOR_VIEWS"), LOCALIZED_STRING(@"COLOR_VIEWS_DESC"), kColorViews);
 
         // Enable for all videos
-        SWITCH_ITEM(LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS"), LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS_DESC"), ENABLE_FOR_ALL_VIDEOS_KEY);
+        SWITCH_ITEM(LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS"), LOCALIZED_STRING(@"ENABLE_FOR_ALL_VIDEOS_DESC"), kEnableForAllVideos);
     }
 
     SECTION_HEADER(LOCALIZED_STRING(@"ABOUT"));
@@ -183,9 +175,3 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     %orig;
 }
 %end
-
-%end // group DEMC_Settings
-
-%ctor {
-    %init(DEMC_Settings);
-}

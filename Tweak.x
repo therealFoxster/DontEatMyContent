@@ -8,8 +8,7 @@ CGFloat constant; // Makes rendering view a bit larger since constraining to saf
 static CGFloat videoAspectRatio = 16/9;
 static BOOL isZoomedToFill = NO;
 static BOOL isEngagementPanelVisible = NO;
-static BOOL isRemoveEngagementPanelViewControllerWithIdentifierCalled = NO;
-
+static BOOL isEngagementPanelViewControllerRemoved = NO;
 static MLHAMSBDLSampleBufferRenderingView *renderingView;
 static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
 
@@ -19,23 +18,12 @@ static void DEMC_centerRenderingView();
 void DEMC_showSnackBar(NSString *text);
 NSBundle *DEMC_getTweakBundle();
 
-%group DEMC_Tweak
-
-// Retrieve video aspect ratio
-%hook YTPlayerView
-- (void)setAspectRatio:(CGFloat)aspectRatio {
-    %orig(aspectRatio);
-    videoAspectRatio = aspectRatio;
-}
-%end
-
 %hook YTPlayerViewController
 - (void)viewDidAppear:(BOOL)animated {
     YTPlayerView *playerView = [self playerView];
     UIView *renderingViewContainer = [playerView valueForKey:@"_renderingViewContainer"];
     renderingView = [playerView renderingView];
-
-    if (IS_DISABLE_AMBIENT_MODE_ENABLED) {
+    if (IS_ENABLED(kDisableAmbientMode)) {
         playerView.backgroundColor = [UIColor blackColor];;
         renderingViewContainer.backgroundColor = [UIColor blackColor];
         renderingView.backgroundColor = [UIColor blackColor];
@@ -44,36 +32,29 @@ NSBundle *DEMC_getTweakBundle();
         renderingViewContainer.backgroundColor = nil;
         renderingView.backgroundColor = nil;
     }
-
-    if (IS_TWEAK_ENABLED) {
+    if (IS_ENABLED(kTweak)) {
         widthConstraint = [renderingView.widthAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.widthAnchor constant:constant];
         heightConstraint = [renderingView.heightAnchor constraintEqualToAnchor:renderingViewContainer.safeAreaLayoutGuide.heightAnchor constant:constant];
         centerXConstraint = [renderingView.centerXAnchor constraintEqualToAnchor:renderingViewContainer.centerXAnchor];
         centerYConstraint = [renderingView.centerYAnchor constraintEqualToAnchor:renderingViewContainer.centerYAnchor];
-
-        if (IS_COLOR_VIEWS_ENABLED) {
+        if (IS_ENABLED(kColorViews)) {
             playerView.backgroundColor = [UIColor blueColor];
             renderingViewContainer.backgroundColor = [UIColor greenColor];
             renderingView.backgroundColor = [UIColor redColor];
         }
-
         YTMainAppVideoPlayerOverlayViewController *activeVideoPlayerOverlay = [self activeVideoPlayerOverlay];
-
         // Must check class since YTInlineMutedPlaybackPlayerOverlayViewController doesn't have -(BOOL)isFullscreen
         if ([activeVideoPlayerOverlay isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)] &&
             [activeVideoPlayerOverlay isFullscreen] && !isZoomedToFill && !isEngagementPanelVisible)
             DEMC_activateConstraints();
     }
-
-    %orig(animated);
+    %orig;
 }
 // New video played
 - (void)playbackController:(id)playbackController didActivateVideo:(id)video withPlaybackData:(id)playbackData {
-    %orig(playbackController, video, playbackData);
-
+    %orig;
     isEngagementPanelVisible = NO;
-    isRemoveEngagementPanelViewControllerWithIdentifierCalled = NO;
-
+    isEngagementPanelViewControllerRemoved = NO;
     if ([[self activeVideoPlayerOverlay] isFullscreen])
         // New video played while in full screen (landscape)
         // Activate since new videos played in full screen aren't zoomed-to-fill by default
@@ -83,10 +64,9 @@ NSBundle *DEMC_getTweakBundle();
         DEMC_deactivateConstraints();
 }
 - (void)setPlayerViewLayout:(int)layout {
-    %orig(layout);
-
-    if (![[self activeVideoPlayerOverlay] isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)]) return;
-
+    %orig;
+    if (![[self activeVideoPlayerOverlay] isKindOfClass:%c(YTMainAppVideoPlayerOverlayViewController)])
+        return;
     switch (layout) {
     case 1: // Mini bar
         break;
@@ -94,7 +74,8 @@ NSBundle *DEMC_getTweakBundle();
         DEMC_deactivateConstraints();
         break;
     case 3: // Fullscreen
-        if (!isZoomedToFill && !isEngagementPanelVisible) DEMC_activateConstraints();
+        if (!isZoomedToFill && !isEngagementPanelVisible)
+            DEMC_activateConstraints();
         break;
     default:
         break;
@@ -102,13 +83,22 @@ NSBundle *DEMC_getTweakBundle();
 }
 %end
 
-// This hook will be used if pinch to zoom is available
-%hook YTVideoFreeZoomOverlayView
+#pragma mark - Retrieve video aspect ratio
+
+%hook YTPlayerView
+- (void)setAspectRatio:(CGFloat)aspectRatio {
+    %orig;
+    videoAspectRatio = aspectRatio;
+}
+%end
+
+#pragma mark - Detect zoom to fill
+
+%hook YTVideoFreeZoomOverlayView // This hook will be used if pinch to zoom is available
 - (void)didRecognizePinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
     DEMC_deactivateConstraints();
-    %orig(pinchGestureRecognizer);
+    %orig;
 }
-// Detect zoom to fill
 - (void)showLabelForSnapState:(NSInteger)snapState {
     if (snapState == 0) { // Original
         isZoomedToFill = NO;
@@ -117,40 +107,40 @@ NSBundle *DEMC_getTweakBundle();
         isZoomedToFill = YES;
         // No need to deactivate constraints as it's already done in -(void)didRecognizePinch:(UIPinchGestureRecognizer *)
     }
-    %orig(snapState);
+    %orig;
 }
 %end
 
-// This hook will be used if pinch to zoom is unavailable
-%hook YTVideoZoomOverlayView
+%hook YTVideoZoomOverlayView // This hook will be used if pinch to zoom is unavailable
 - (void)didRecognizePinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
     DEMC_deactivateConstraints();
-    %orig(pinchGestureRecognizer);
+    %orig;
 }
-// Detect zoom to fill
 - (void)showLabelForSnapState:(NSInteger)snapState {
-    if (snapState == 0) { // Original
+    if (snapState == 0) {
         isZoomedToFill = NO;
         DEMC_activateConstraints();
-    } else if (snapState == 1) { // Zoomed to fill
+    } else if (snapState == 1) {
         isZoomedToFill = YES;
-        // No need to deactivate constraints as it's already done in -(void)didRecognizePinch:(UIPinchGestureRecognizer *)
     }
-    %orig(snapState);
+    %orig;
 }
 %end
 
-// Mini bar dismiss
+#pragma mark - Mini bar dismiss
+
 %hook YTWatchMiniBarViewController
 - (void)dismissMiniBarWithVelocity:(CGFloat)velocity gestureType:(int)gestureType {
-    %orig(velocity, gestureType);
+    %orig;
     isZoomedToFill = NO; // YouTube undoes zoom-to-fill when mini bar is dismissed
 }
 - (void)dismissMiniBarWithVelocity:(CGFloat)velocity gestureType:(int)gestureType skipShouldDismissCheck:(BOOL)skipShouldDismissCheck {
-    %orig(velocity, gestureType, skipShouldDismissCheck);
+    %orig;
     isZoomedToFill = NO;
 }
 %end
+
+#pragma mark - Engagement panels
 
 %hook YTMainAppEngagementPanelViewController
 // Engagement panel (comment, description, etc.) about to show up
@@ -164,7 +154,7 @@ NSBundle *DEMC_getTweakBundle();
             DEMC_deactivateConstraints();
         }
     }
-    %orig(animated);
+    %orig;
 }
 %end
 
@@ -174,7 +164,7 @@ NSBundle *DEMC_getTweakBundle();
     // Crashes if plays new video while in full screen causing engagement panel dismissal
     // Must check if engagement panel was dismissed because new video played
     // (i.e. if -(void)removeEngagementPanelViewControllerWithIdentifier:(id) was called prior)
-    if (![self isPeekingSupported] && !isRemoveEngagementPanelViewControllerWithIdentifierCalled) {
+    if (![self isPeekingSupported] && !isEngagementPanelViewControllerRemoved) {
         isEngagementPanelVisible = NO;
         if ([self isLandscapeEngagementPanel] && !isZoomedToFill) {
             DEMC_activateConstraints();
@@ -184,25 +174,27 @@ NSBundle *DEMC_getTweakBundle();
 }
 - (void)removeEngagementPanelViewControllerWithIdentifier:(id)identifier {
     // Usually called when engagement panel is open & new video is played or mini bar is dismissed
-    isRemoveEngagementPanelViewControllerWithIdentifierCalled = YES;
-    %orig(identifier);
+    isEngagementPanelViewControllerRemoved = YES;
+    %orig;
 }
 %end
 
-%end // group DEMC_Tweak
+#pragma mark - Constructor
 
 %ctor {
-    constant = [[NSUserDefaults standardUserDefaults] floatForKey:SAFE_AREA_CONSTANT_KEY];
+    constant = [[NSUserDefaults standardUserDefaults] floatForKey:kSafeAreaConstant];
     if (constant == 0) { // First launch probably
         constant = DEFAULT_CONSTANT;
-        [[NSUserDefaults standardUserDefaults] setFloat:constant forKey:SAFE_AREA_CONSTANT_KEY];
+        [[NSUserDefaults standardUserDefaults] setFloat:constant forKey:kSafeAreaConstant];
     }
-    %init(DEMC_Tweak);
+    %init;
 }
 
+#pragma mark - Functions
+
 static void DEMC_activateConstraints() {
-    if (!IS_TWEAK_ENABLED) return;
-    if (videoAspectRatio < THRESHOLD && !IS_ENABLE_FOR_ALL_VIDEOS_ENABLED) {
+    if (!IS_ENABLED(kTweak)) return;
+    if (videoAspectRatio < THRESHOLD && !IS_ENABLED(kEnableForAllVideos)) {
         DEMC_deactivateConstraints();
         return;
     }
@@ -214,7 +206,7 @@ static void DEMC_activateConstraints() {
 }
 
 static void DEMC_deactivateConstraints() {
-    if (!IS_TWEAK_ENABLED) return;
+    if (!IS_ENABLED(kTweak)) return;
     // NSLog(@"deactivate");
     renderingView.translatesAutoresizingMaskIntoConstraints = YES;
 }
