@@ -33,4 +33,4 @@
 "ENABLE_FOR_ALL_VIDEOS" = "Activar para todos los vídeos (experimental)";
 "ENABLE_FOR_ALL_VIDEOS_DESC" = "Activar las restricciones de zona segura para todos los vídeos. Esto podría causar efectos no deseados. Envíe un informe de error antes de activar esta opción.";
 
-"ABOUT" = "About";
+"ABOUT" = "Acerca de";
