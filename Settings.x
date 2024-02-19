@@ -1,4 +1,5 @@
 #import "Tweak.h"
+#import "Settings.h"
 
 // Adapted from 
 // https://github.com/PoomSmart/YouPiP/blob/bd04bf37be3d01540db418061164ae17a8f0298e/Settings.x
@@ -6,10 +7,6 @@
 
 #define SECTION_HEADER(s) [sectionItems addObject:[%c(YTSettingsSectionItem) itemWithTitle:@"\t" titleDescription:[s uppercaseString] accessibilityIdentifier:nil detailTextBlock:nil selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) { return NO; }]]
 #define SWITCH_ITEM(t, d, k) [sectionItems addObject:[%c(YTSettingsSectionItem) switchItemWithTitle:t titleDescription:d accessibilityIdentifier:nil switchOn:IS_ENABLED(k) switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {[[NSUserDefaults standardUserDefaults] setBool:enabled forKey:k];DEMC_showSnackBar(LOCALIZED_STRING(@"CHANGES_SAVED"));return YES;} settingItemId:0]]
-
-extern void DEMC_showSnackBar(NSString *text);
-extern NSBundle *DEMC_getTweakBundle();
-extern CGFloat constant;
 
 static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a random number)
 
