@@ -1,22 +1,15 @@
-#import <sys/utsname.h>
-#import <rootless.h>
 #import "Tweak.h"
 
-#define THRESHOLD 1.97
-
-CGFloat constant; // Makes rendering view a bit larger since constraining to safe area leaves a gap between the notch/Dynamic Island and video
 static CGFloat videoAspectRatio = 16/9;
 static BOOL isZoomedToFill = NO;
 static BOOL isEngagementPanelVisible = NO;
 static BOOL isEngagementPanelViewControllerRemoved = NO;
-static MLHAMSBDLSampleBufferRenderingView *renderingView;
+static UIView *renderingView; // MLHAMSBDLSampleBufferRenderingView *
 static NSLayoutConstraint *widthConstraint, *heightConstraint, *centerXConstraint, *centerYConstraint;
 
 static void DEMC_activateConstraints();
 static void DEMC_deactivateConstraints();
 static void DEMC_centerRenderingView();
-void DEMC_showSnackBar(NSString *text);
-NSBundle *DEMC_getTweakBundle();
 
 %hook YTPlayerViewController
 - (void)viewDidAppear:(BOOL)animated {
