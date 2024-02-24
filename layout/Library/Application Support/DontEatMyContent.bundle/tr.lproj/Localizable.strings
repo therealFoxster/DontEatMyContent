@@ -20,17 +20,17 @@
 
 "UNSUPPORTED_DEVICE" = "Bu cihaz uyumlu değil";
 
-"DISABLE_AMBIENT_MODE" = "Disable ambient mode in landscape";
-"VERSION" = "Version";
+"DISABLE_AMBIENT_MODE" = "Ambiyans modunu devre dışı bırak";
+"VERSION" = "Sürüm";
 
-"LIMIT_ZOOM_TO_FILL" = "Zoom to almost fill (experimental)";
-"LIMIT_ZOOM_TO_FILL_DESC" = "Limits zoom to fill to the notch/Dynamic Island";
+"LIMIT_ZOOM_TO_FILL" = "Neredeyse ekranın tamamını kaplamak için yakınlaştır (deneysel)";
+"LIMIT_ZOOM_TO_FILL_DESC" = "Yakınlaştırmayı Çentik/Dinamik Ada ile sınırlar";
 
-"ADD_TITLE" = "Add your title here...";
+"ADD_TITLE" = "Başlığınızı buraya ekleyin...";
 
-"ADVANCED" = "Advanced";
+"ADVANCED" = "Gelişmiş";
 
-"ENABLE_FOR_ALL_VIDEOS" = "Enable for all videos (experimental)";
-"ENABLE_FOR_ALL_VIDEOS_DESC" = "Enable safe area constraints for all videos. This might cause unintended effects. Please file a bug report before enabling this option";
+"ENABLE_FOR_ALL_VIDEOS" = "Tüm videolar için etkinleştir (deneysel)";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "Tüm videolar için güvenli alan kısıtlamalarını etkinleştir. Bu istenmeyen etkilere neden olabilir. Bu seçeneği etkinleştirmeden önce lütfen bir hata raporu gönder.";
 
-"ABOUT" = "About";
+"ABOUT" = "Hakkında";
