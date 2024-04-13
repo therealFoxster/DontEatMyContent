@@ -6,7 +6,7 @@ Prevent the notch/Dynamic Island from munching on 2:1 video content in YouTube
 </p>
 
 ## How it works
-The rendering view is constrained to the safe area layout guide of its container so it will always be below the notch and Dynamic Island. These constraints are only activated for videos with 2:1 aspect ratio or wider to prevent unintended effects on videos with smaller aspect ratios. 
+The rendering view is constrained to the [safe area layout guide](https://developer.apple.com/documentation/uikit/uiview/2891102-safearealayoutguide?language=objc) of its container so it will always be below the notch and Dynamic Island ([learn more](https://developer.apple.com/documentation/uikit/uiview/positioning_content_relative_to_the_safe_area?language=objc)). These constraints are only activated for videos with 2:1 aspect ratio or wider to prevent unintended effects on videos with smaller aspect ratios. 
 
 ## Compatibility
 Runs on all devices on iOS/iPadOS 14.0 or later, though I wouldn't recommend enabling the tweak if the notch doesn't cut into your videos.
