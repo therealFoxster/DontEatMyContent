@@ -130,7 +130,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) {
             NSString *url = [NSString stringWithFormat:@"https://github.com/therealFoxster/DontEatMyContent/issues/new/?title=[v%@] %@", VERSION, LOCALIZED_STRING(@"ADD_TITLE")];
-            return [%c(YTUIUtils) openURL:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]]];
+            return [%c(YTUIUtils) openURL:[NSURL URLWithString:url]];
         }
     ]];
 
