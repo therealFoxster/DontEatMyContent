@@ -2,6 +2,8 @@ name: Build and release DontEatMyContent
 
 on:
   push:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
