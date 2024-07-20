@@ -57,7 +57,7 @@ jobs:
         echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
         echo "SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
         if [ "${{ steps.control_changed.outputs.control }}" == "true" ]; then
-          echo "TAG_NAME=v${{ env.VERSION }}"" >> $GITHUB_ENV
+          echo "TAG_NAME=v${{ env.VERSION }}" >> $GITHUB_ENV
           echo "RELEASE_NAME=v${{ env.VERSION }}" >> $GITHUB_ENV
         else
           echo "TAG_NAME=v${{ env.VERSION }}-${{ env.SHA }}" >> $GITHUB_ENV
