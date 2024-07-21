@@ -5,7 +5,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = DontEatMyContent
 
-DontEatMyContent_FILES = Tweak.x Settings.x
+DontEatMyContent_FILES = src/Tweak.x src/Settings.x
 DontEatMyContent_CFLAGS = -fobjc-arc
 DontEatMyContent_FRAMEWORKS = UIKit
 
