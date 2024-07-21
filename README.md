@@ -2,8 +2,12 @@
 Prevent the notch/Dynamic Island from munching on 2:1 video content in YouTube
 
 <p align="center">
-<img src="https://github.com/therealFoxster/DontEatMyContent/assets/77606385/c6e7be92-a6a6-4b0c-be97-bf490385fea1" width="640">
+  <img src="https://github.com/therealFoxster/DontEatMyContent/assets/77606385/c6e7be92-a6a6-4b0c-be97-bf490385fea1" width="640">
+  <br>
+  <a href="https://github.com/therealFoxster/DontEatMyContent/actions"><img src="https://img.shields.io/github/actions/workflow/status/therealfoxster/donteatmycontent/ci.yml" alt="GitHub Actions Workflow Status"></a>
+  <a href="https://github.com/therealFoxster/DontEatMyContent/releases/latest"><img src="https://img.shields.io/github/v/release/therealfoxster/donteatmycontent" alt="GitHub Release"></a>
 </p>
+
 
 ## How it works
 The rendering view is constrained to the [safe area layout guide](https://developer.apple.com/documentation/uikit/uiview/2891102-safearealayoutguide?language=objc) of its container so it will always be below the notch and Dynamic Island ([learn more](https://developer.apple.com/documentation/uikit/uiview/positioning_content_relative_to_the_safe_area?language=objc)). These constraints are only activated for videos with 2:1 aspect ratio or wider to prevent unintended effects on videos with smaller aspect ratios. 
