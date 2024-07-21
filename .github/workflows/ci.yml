@@ -6,6 +6,7 @@ on:
       - develop
     paths-ignore:
       - 'README.md'
+      - 'LICENSE.md'
       - '.github/workflows/ci.yml'
   workflow_dispatch:
 
