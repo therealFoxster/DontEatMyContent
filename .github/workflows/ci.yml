@@ -3,7 +3,7 @@ name: Build and release DontEatMyContent
 on:
   push:
     branches:
-      - master
+      - develop
   workflow_dispatch:
 
 jobs:
@@ -53,23 +53,28 @@ jobs:
       env:
         THEOS: ${{ github.workspace }}/theos
 
-    - name: Set release details
-      run: |
-        echo "VERSION=$(grep '^Version:' ./control | cut -d ' ' -f 2)" >> $GITHUB_ENV
-        echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-        echo "SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
-      env:
-        THEOS: ${{ github.workspace }}/theos
-
-    - name: Create release
-      uses: softprops/action-gh-release@v2
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag_name: v${{ env.VERSION }}-${{ env.SHA }}
-        name: v${{ env.VERSION }}-${{ env.SHA }}
-        body: |
-          ## What's New
-          - ${{ env.COMMIT_MESSAGE }}
-        draft: false
-        prerelease: true
-        files: ./packages/${{ env.DEB_PACKAGE }}
+        name: ${{ env.DEB_PACKAGE }}
+
+    # - name: Set release details
+    #   run: |
+    #     echo "VERSION=$(grep '^Version:' ./control | cut -d ' ' -f 2)" >> $GITHUB_ENV
+    #     echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+    #     echo "SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+    #   env:
+    #     THEOS: ${{ github.workspace }}/theos
+
+    # - name: Create release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     tag_name: v${{ env.VERSION }}-${{ env.SHA }}
+    #     name: v${{ env.VERSION }}-${{ env.SHA }}
+    #     body: |
+    #       ## What's New
+    #       - ${{ env.COMMIT_MESSAGE }}
+    #     draft: false
+    #     prerelease: true
+    #     files: ./packages/${{ env.DEB_PACKAGE }}
