@@ -49,14 +49,16 @@ jobs:
           exit 1
         fi
         mv "packages/$PACKAGE" "packages/${PACKAGE%.deb}-${{ github.sha }}.deb"
-        echo "DEB_PACKAGE=${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
+        echo "PACKAGE_NAME=${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
+        echo "PACKAGE_PATH=packages/${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
       env:
         THEOS: ${{ github.workspace }}/theos
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.DEB_PACKAGE }}
+        name: ${{ env.PACKAGE_NAME }}
+        path: ${{ env.PACKAGE_PATH }}
 
     # - name: Set release details
     #   run: |
