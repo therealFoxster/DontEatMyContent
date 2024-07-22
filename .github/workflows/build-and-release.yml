@@ -51,7 +51,7 @@ jobs:
 
     - name: Set release details
       run: |
-        git fetch --prune --unshallow
+        git fetch --prune
         LAST_TAG=$(git describe --tags --abbrev=0 --always)
         echo "Last tag: $LAST_TAG"
         if [ "$LAST_TAG" != "" ]; then
