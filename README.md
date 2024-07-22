@@ -4,7 +4,7 @@ Prevent the notch/Dynamic Island from munching on 2:1 video content in YouTube
 <p align="center">
   <img src="https://github.com/therealFoxster/DontEatMyContent/assets/77606385/c6e7be92-a6a6-4b0c-be97-bf490385fea1" width="640">
   <br>
-  <a href="https://github.com/therealFoxster/DontEatMyContent/actions"><img src="https://img.shields.io/github/actions/workflow/status/therealfoxster/donteatmycontent/ci.yml" alt="GitHub Actions Workflow Status"></a>
+  <a href="https://github.com/therealFoxster/DontEatMyContent/actions"><img src="https://img.shields.io/github/actions/workflow/status/therealfoxster/donteatmycontent/build.yml" alt="GitHub Actions Workflow Status"></a>
   <a href="https://github.com/therealFoxster/DontEatMyContent/releases/latest"><img src="https://img.shields.io/github/v/release/therealfoxster/donteatmycontent" alt="GitHub Release"></a>
 </p>
 
