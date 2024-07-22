@@ -55,7 +55,7 @@ jobs:
         LAST_TAG=$(git describe --tags --abbrev=0 --always)
         echo "Last tag: $LAST_TAG"
         if [ "$LAST_TAG" != "" ]; then
-          COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"%h - %s")
+          COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)")
           echo "COMMITS<<EOF" >> $GITHUB_ENV
           echo "$COMMITS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -77,7 +77,7 @@ jobs:
         name: v${{ env.VERSION }}-${{ env.SHA }}
         body: |
           ## What's New
-          - ${{ env.COMMITS }}
+          ${{ env.COMMITS }}
         draft: true
         prerelease: true
         files: ${{ env.PACKAGE_PATH }}
