@@ -1,0 +1,77 @@
+name: Build and release DontEatMyContent
+
+on:
+  push:
+    paths:
+      - control
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout DontEatMyContent
+      uses: actions/checkout@v4.1.7
+      with:
+        submodules: recursive
+
+    - name: Checkout Theos
+      uses: actions/checkout@v4.1.7
+      with:
+        repository: theos/theos
+        ref: master
+        path: theos
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        brew install ldid
+
+    - name: Build
+      run: |
+        make package
+        PACKAGE=$(ls packages/ | grep .deb)
+        if [ -z "$PACKAGE" ]; then
+          echo "No packages found."
+          exit 1
+        fi
+        mv "packages/$PACKAGE" "packages/${PACKAGE%.deb}-${{ github.sha }}.deb"
+        echo "PACKAGE_NAME=${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
+        echo "PACKAGE_PATH=packages/${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
+      env:
+        THEOS: ${{ github.workspace }}/theos
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.PACKAGE_NAME }}
+        path: ${{ env.PACKAGE_PATH }}
+
+    - name: Set release details
+      run: |
+        git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+        LAST_TAG=$(git describe --tags --abbrev=0)
+        COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"%h - %s")
+        echo "COMMITS<<EOF" >> $GITHUB_ENV
+        echo "$COMMITS" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
+        echo "VERSION=$(grep '^Version:' ./control | cut -d ' ' -f 2)" >> $GITHUB_ENV
+
+        echo "SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+      env:
+        THEOS: ${{ github.workspace }}/theos
+
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: v${{ env.VERSION }}
+        name: v${{ env.VERSION }}
+        body: |
+          ## What's New
+          - ${{ env.COMMITS }}
+        draft: true
+        prerelease: true
+        files: ${{ env.PACKAGE_PATH }}
