@@ -9,6 +9,7 @@ on:
       - 'LICENSE.md'
       - '.github/workflows/build.yml'
       - '.github/workflows/build-and-release.yml'
+      - control
   workflow_dispatch:
 
 jobs:
