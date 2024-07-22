@@ -35,22 +35,18 @@ jobs:
         make package FINALPACKAGE=1
         make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
         # make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
-        PACKAGE=$(ls packages/ | grep .deb)
-        if [ -z "$PACKAGE" ]; then
+        PACKAGES=$(ls packages/ | grep .deb)
+        if [ -z "$PACKAGES" ]; then
           echo "No packages found."
           exit 1
         fi
-        for PACKAGE in $PACKAGES; do
-          mv "packages/$PACKAGE" "packages/${PACKAGE%.deb}-${{ github.sha }}.deb"
-          echo "Renamed $PACKAGE to ${PACKAGE%.deb}-${{ github.sha }}.deb"
-        done
       env:
         THEOS: ${{ github.workspace }}/theos
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: packages
+        name: Packages
         path: packages/
 
     - name: Set release details
