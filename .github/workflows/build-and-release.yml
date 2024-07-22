@@ -51,7 +51,7 @@ jobs:
     - name: Set release details
       run: |
         git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-        LAST_TAG=$(git describe --tags --abbrev=0)
+        LAST_TAG=$(git describe --tags --abbrev=0 --always)
         COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"%h - %s")
         echo "COMMITS<<EOF" >> $GITHUB_ENV
         echo "$COMMITS" >> $GITHUB_ENV
