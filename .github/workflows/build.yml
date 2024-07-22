@@ -8,6 +8,7 @@ on:
       - 'README.md'
       - 'LICENSE.md'
       - '.github/workflows/build.yml'
+      - '.github/workflows/build-and-release.yml'
   workflow_dispatch:
 
 jobs:
