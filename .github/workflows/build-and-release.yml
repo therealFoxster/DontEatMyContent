@@ -78,6 +78,5 @@ jobs:
         body: |
           ## What's New
           ${{ env.COMMITS }}
-        draft: true
         prerelease: true
         files: ${{ env.PACKAGE_PATH }}
