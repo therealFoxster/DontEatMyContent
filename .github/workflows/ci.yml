@@ -15,7 +15,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4.1.7
+    - name: Checkout code
+      uses: actions/checkout@v4.1.7
       with:
         submodules: recursive
 
@@ -31,22 +32,9 @@ jobs:
       run: |
         brew install ldid
 
-    - name: Check control
-      id: control_changed
-      uses: dorny/paths-filter@v3.0.2
-      with:
-        list-files: shell
-        filters: |
-          control:
-            - './control'
-
     - name: Build
       run: |
-        if [ "${{ steps.control_changed.outputs.control }}" = "true" ]; then
-          make package FINALPACKAGE=1
-        else
-          make package
-        fi
+        make package
         PACKAGE=$(ls packages/ | grep .deb)
         if [ -z "$PACKAGE" ]; then
           echo "No packages found."
