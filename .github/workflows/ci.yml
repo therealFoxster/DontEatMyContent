@@ -15,12 +15,12 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout DontEatMyContent
       uses: actions/checkout@v4.1.7
       with:
         submodules: recursive
 
-    - name: Set up Theos
+    - name: Checkout Theos
       uses: actions/checkout@v4.1.7
       with:
         repository: theos/theos
