@@ -31,7 +31,7 @@ jobs:
 
     - name: Build
       run: |
-        make package
+        make package FINALPACKAGE=1
         PACKAGE=$(ls packages/ | grep .deb)
         if [ -z "$PACKAGE" ]; then
           echo "No packages found."
