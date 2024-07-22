@@ -28,13 +28,13 @@ jobs:
     - name: Install dependencies
       run: |
         brew install ldid
-        bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
+        # bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
 
     - name: Build
       run: |
         make package FINALPACKAGE=1
         make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-        make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
+        # make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
         PACKAGE=$(ls packages/ | grep .deb)
         if [ -z "$PACKAGE" ]; then
           echo "No packages found."

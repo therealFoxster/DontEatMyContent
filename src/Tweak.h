@@ -1,6 +1,6 @@
 // #import <sys/utsname.h>
 #import <rootless.h>
-#include <roothide.h>
+// #include <roothide.h>
 #import <YTHeaders/YTPlayerViewController.h>
 #import <YTHeaders/YTPlayerView.h>
 #import <YTHeaders/YTMainAppVideoPlayerOverlayViewController.h>
