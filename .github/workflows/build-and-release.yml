@@ -28,26 +28,30 @@ jobs:
     - name: Install dependencies
       run: |
         brew install ldid
+        bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
 
     - name: Build
       run: |
         make package FINALPACKAGE=1
+        make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+        make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
         PACKAGE=$(ls packages/ | grep .deb)
         if [ -z "$PACKAGE" ]; then
           echo "No packages found."
           exit 1
         fi
-        mv "packages/$PACKAGE" "packages/${PACKAGE%.deb}-${{ github.sha }}.deb"
-        echo "PACKAGE_NAME=${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
-        echo "PACKAGE_PATH=packages/${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
+        for PACKAGE in $PACKAGES; do
+          mv "packages/$PACKAGE" "packages/${PACKAGE%.deb}-${{ github.sha }}.deb"
+          echo "Renamed $PACKAGE to ${PACKAGE%.deb}-${{ github.sha }}.deb"
+        done
       env:
         THEOS: ${{ github.workspace }}/theos
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.PACKAGE_NAME }}
-        path: ${{ env.PACKAGE_PATH }}
+        name: packages
+        path: packages/
 
     - name: Set release details
       run: |
@@ -79,4 +83,5 @@ jobs:
           ## What's New
           ${{ env.COMMITS }}
         prerelease: true
-        files: ${{ env.PACKAGE_PATH }}
+        files: |
+          packages/*.deb
