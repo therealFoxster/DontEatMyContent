@@ -5,7 +5,7 @@
 #import <YTHeaders/YTSettingsViewController.h>
 
 #define DEMC @"DontEatMyContent"
-#define VERSION @"1.1.6"
+#define VERSION [NSString stringWithFormat:@"v%@", @(OS_STRINGIFY(TWEAK_VERSION))]
 #define LOCALIZED_STRING(s) [bundle localizedStringForKey:s value:nil table:nil]
 
 extern void DEMC_showSnackBar(NSString *text);
