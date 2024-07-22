@@ -33,44 +33,23 @@ jobs:
     - name: Install dependencies
       run: |
         brew install ldid
+        # bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
 
     - name: Build
       run: |
-        make package
-        PACKAGE=$(ls packages/ | grep .deb)
-        if [ -z "$PACKAGE" ]; then
+        make package FINALPACKAGE=1
+        make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+        # make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
+        PACKAGES=$(ls packages/ | grep .deb)
+        if [ -z "$PACKAGES" ]; then
           echo "No packages found."
           exit 1
         fi
-        mv "packages/$PACKAGE" "packages/${PACKAGE%.deb}-${{ github.sha }}.deb"
-        echo "PACKAGE_NAME=${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
-        echo "PACKAGE_PATH=packages/${PACKAGE%.deb}-${{ github.sha }}.deb" >> $GITHUB_ENV
       env:
         THEOS: ${{ github.workspace }}/theos
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.PACKAGE_NAME }}
-        path: ${{ env.PACKAGE_PATH }}
-
-    # - name: Set release details
-    #   run: |
-    #     echo "VERSION=$(grep '^Version:' ./control | cut -d ' ' -f 2)" >> $GITHUB_ENV
-    #     echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-    #     echo "SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
-    #   env:
-    #     THEOS: ${{ github.workspace }}/theos
-
-    # - name: Create release
-    #   uses: softprops/action-gh-release@v2
-    #   with:
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     tag_name: v${{ env.VERSION }}-${{ env.SHA }}
-    #     name: v${{ env.VERSION }}-${{ env.SHA }}
-    #     body: |
-    #       ## What's New
-    #       - ${{ env.COMMIT_MESSAGE }}
-    #     draft: false
-    #     prerelease: true
-    #     files: ./packages/${{ env.DEB_PACKAGE }}
+        name: Packages
+        path: packages/
