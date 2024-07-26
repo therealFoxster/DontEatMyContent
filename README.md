@@ -16,8 +16,8 @@ The rendering view is constrained to the [safe area layout guide](https://develo
 Runs on all devices on iOS/iPadOS 14.0 or later, though I wouldn't recommend enabling the tweak if the notch doesn't cut into your videos.
 
 ## Grab it
-- IPA file: https://therealfoxster.github.io/uYouPlus
-- DEB file: https://github.com/therealFoxster/DontEatMyContent/releases/latest
+- IPA: https://therealfoxster.github.io/uYouPlus
+- DEB: https://github.com/therealFoxster/DontEatMyContent/releases/latest
 
 ## Preview - iPhone 15 Pro
 ### Default
