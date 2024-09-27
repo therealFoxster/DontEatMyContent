@@ -129,7 +129,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         accessibilityIdentifier:nil
         detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) {
-            NSString *url = [NSString stringWithFormat:@"https://github.com/therealFoxster/DontEatMyContent/issues/new/?title=[v%@] %@", VERSION, LOCALIZED_STRING(@"ADD_TITLE")];
+            NSString *url = [NSString stringWithFormat:@"https://github.com/therealFoxster/DontEatMyContent/issues/new/?title=[v%@] %@", DEMC_VERSION, LOCALIZED_STRING(@"ADD_TITLE")];
             return [%c(YTUIUtils) openURL:[NSURL URLWithString:url]];
         }
     ]];
@@ -140,7 +140,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         titleDescription:nil
         accessibilityIdentifier:nil
         detailTextBlock:^NSString *() {
-            return VERSION;
+            return [NSString stringWithFormat:@"v%@", DEMC_VERSION];
         }
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger sectionItemIndex) {
             return [%c(YTUIUtils) openURL:[NSURL URLWithString:@"https://github.com/therealFoxster/DontEatMyContent/releases/"]];
