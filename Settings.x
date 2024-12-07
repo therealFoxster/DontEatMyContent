@@ -151,7 +151,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
         // For YouTube v19.03.2+ (https://github.com/PoomSmart/YouPiP/commit/0597b15d57361e652557a33f0592667058c5145c)
         [delegate setSectionItems:sectionItems
             forCategory:sectionId 
-            title:DEMC 
+            title:LOCALIZED_STRING(@"SETTINGS_TITLE") 
             icon:nil 
             titleDescription:nil 
             headerHidden:NO
@@ -159,7 +159,7 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
     else
         [delegate setSectionItems:sectionItems 
             forCategory:sectionId 
-            title:DEMC
+            title:LOCALIZED_STRING(@"SETTINGS_TITLE")
             titleDescription:nil 
             headerHidden:NO
         ];
