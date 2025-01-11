@@ -80,10 +80,11 @@ static const NSInteger sectionId = 517; // DontEatMyContent's section ID (just a
                 
                 // Create rows
                 NSMutableArray *rows = [NSMutableArray array];
-                float currentConstant = 20.0;
+                float MAX = 25.0;
+                float currentConstant = -MAX;
                 float storedConstant = [[NSUserDefaults standardUserDefaults] floatForKey:kSafeAreaConstant];
                 UInt8 index = 0, selectedIndex = 0;
-                while (currentConstant <= 25.0) {
+                while (currentConstant <= MAX) {
                     NSString *title = [NSString stringWithFormat:@"%.1f", currentConstant];
                     if (currentConstant == DEFAULT_CONSTANT)
                         title = [NSString stringWithFormat:@"%.1f (%@)", currentConstant, LOCALIZED_STRING(@"DEFAULT")];
