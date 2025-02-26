@@ -159,7 +159,7 @@ static void DEMC_centerRenderingView();
     // (i.e. if -(void)removeEngagementPanelViewControllerWithIdentifier:(id) was called prior)
     if (![self isPeekingSupported] && !isEngagementPanelViewControllerRemoved) {
         isEngagementPanelVisible = NO;
-        if ([self isLandscapeEngagementPanel] && !isZoomedToFill) {
+        if (([self respondsToSelector:@selector(isWatchLandscapeEngagementPanel)] ? self.watchLandscapeEngagementPanel : self.landscapeEngagementPanel) && !isZoomedToFill) {
             DEMC_activateConstraints();
         }
     }
