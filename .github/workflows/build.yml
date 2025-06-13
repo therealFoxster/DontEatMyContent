@@ -7,8 +7,7 @@ on:
     paths-ignore:
       - 'README.md'
       - 'LICENSE.md'
-      - '.github/workflows/build.yml'
-      - '.github/workflows/build-and-release.yml'
+      - '.github/**'
       - control
   workflow_dispatch:
 
