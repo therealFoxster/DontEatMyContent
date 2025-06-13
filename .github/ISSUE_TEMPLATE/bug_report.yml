@@ -1,6 +1,6 @@
 name: Bug report
 description: Report a bug
-title: "[v<replace_this_with_your_tweak_version>] <replace_this_with_your_title>"
+title: "[v<REPLACE_THIS_WITH_YOUR_TWEAK_VERSION>] <REPLACE_THIS_WITH_YOUR_ISSUE_TITLE>"
 labels: bug
 
 body:
