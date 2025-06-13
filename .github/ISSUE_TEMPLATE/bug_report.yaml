@@ -7,8 +7,8 @@ body:
 
 - type: checkboxes
   attributes:
-    label: Have you checked reported issues?
-    description: Please review existing [issues](https://github.com/therealFoxster/DontEatMyContent/issues) before creating filing this report. You might find workarounds/solutions to the issue you're facing there too!
+    label: Have you checked existing issues?
+    description: **⚠️ IMPORTANT:** Please review existing [issues](https://github.com/therealFoxster/DontEatMyContent/issues) before filing this report. You might find workarounds/solutions to the issue you're facing there too! Duplicated issues will be closed without further explanation.
     options:
     - label: Yes, I checked existing issues.
       required: true
