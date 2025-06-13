@@ -29,21 +29,21 @@ body:
   validations:
     required: true
 
-- type: input
-  id: tweak_version
-  attributes:
-    label: DontEatMyContent version
-    description:
-    placeholder: e.g., 1.1.10
-  validations:
-    required: true
+# - type: input
+#   id: tweak_version
+#   attributes:
+#     label: DontEatMyContent version
+#     description:
+#     placeholder: e.g., 1.1.10
+#   validations:
+#     required: true
 
-- type: textarea
-  attributes:
-    label: IPA source
-    description: How did you get the YouTube IPA?
-  validations:
-    required: true
+# - type: textarea
+#   attributes:
+#     label: IPA source
+#     description: How did you get the YouTube IPA?
+#   validations:
+#     required: true
 
 - type: textarea
   attributes:
