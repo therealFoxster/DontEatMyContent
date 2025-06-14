@@ -17,7 +17,7 @@ body:
   attributes:
     label: iOS version
     description: Settings > About > iOS Version
-    placeholder: e.g., iOS 18.5
+    placeholder: e.g., 18.5
   validations:
     required: true
 
