@@ -1,5 +1,7 @@
 #import "Tweak.h"
 
+CGFloat constant;
+
 static CGFloat videoAspectRatio = 16/9;
 static BOOL isZoomedToFill = NO;
 static BOOL isEngagementPanelVisible = NO;

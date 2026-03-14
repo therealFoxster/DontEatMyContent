@@ -27,4 +27,4 @@
 
 void DEMC_showSnackBar(NSString *text);
 NSBundle *DEMC_getTweakBundle();
-CGFloat constant; // Makes rendering view a bit larger since constraining to safe area leaves a gap between the notch/Dynamic Island and video
+extern CGFloat constant; // Makes rendering view a bit larger since constraining to safe area leaves a gap between the notch/Dynamic Island and video
