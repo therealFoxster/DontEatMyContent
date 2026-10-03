@@ -1,0 +1,38 @@
+"SETTINGS_TITLE" = "DontEatMyContent";
+
+"ENABLED" = "활성화";
+"TWEAK_DESC" = "노치 또는 Dynamic Island가 2:1 비율 동영상(예: MKBHD 영상)을 가리지 않도록 방지합니다.";
+
+"SAFE_AREA_CONST" = "안전 영역 상수";
+"SAFE_AREA_CONST_DESC" = "이 상수를 조절하여 동영상을 노치/Dynamic Island에 더 가깝게 또는 더 멀어지게 배치합니다. 값이 클수록 노치/Dynamic Island에 가까워지며, 값이 작을수록 멀어집니다.";
+"DEFAULT" = "기본값";
+"CHANGES_SAVED_DISMISS_VIDEO" = "변경 사항이 저장되었습니다. 현재 재생 중인 동영상이 있다면 동영상을 닫아야 변경 사항이 적용됩니다.";
+
+"COLOR_VIEWS" = "디버그용 뷰 색상 표시";
+"COLOR_VIEWS_DESC" = "렌더링 뷰는 빨간색, 렌더링 뷰 컨테이너는 초록색, 플레이어 뷰는 파란색 배경으로 설정합니다.";
+
+"REPORT_ISSUE" = "문제 신고";
+"SOURCE_CODE" = "소스 코드 보기";
+
+"CHANGES_SAVED" = "변경 사항이 저장되었습니다.";
+
+"EXIT" = "종료";
+"LATER" = "나중에";
+"EXIT_YT_DESC" = "변경 사항을 적용하려면 YouTube를 재실행하세요.";
+
+"UNSUPPORTED_DEVICE" = "지원되지 않는 기기입니다.";
+
+"DISABLE_AMBIENT_MODE" = "가로 모드에서 앰비언트 모드 비활성화";
+"VERSION" = "버전";
+
+"LIMIT_ZOOM_TO_FILL" = "화면에 거의 맞게 확대 (실험적)";
+"LIMIT_ZOOM_TO_FILL_DESC" = "화면 맞춤 확대 범위를 노치/Dynamic Island 직전까지로 제한합니다.";
+
+"ADD_TITLE" = "여기에 제목을 입력하세요...";
+
+"ADVANCED" = "고급";
+
+"ENABLE_FOR_ALL_VIDEOS" = "모든 동영상에 적용 (실험적)";
+"ENABLE_FOR_ALL_VIDEOS_DESC" = "모든 동영상에 안전 영역 제약 조건을 적용합니다. 의도치 않은 동작이 발생할 수 있으니 활성화 전 버그를 신고해 주시기 바랍니다.";
+
+"ABOUT" = "정보";
