@@ -1,39 +1,39 @@
 # DontEatMyContent
-Prevent the notch/Dynamic Island from munching on 2:1 video content in YouTube
 
-<p align="center">
-  <img src="https://github.com/therealFoxster/DontEatMyContent/assets/77606385/c6e7be92-a6a6-4b0c-be97-bf490385fea1" width="640">
-  <br>
-  <a href="https://github.com/therealFoxster/DontEatMyContent/actions"><img src="https://img.shields.io/github/actions/workflow/status/therealfoxster/donteatmycontent/build.yml" alt="GitHub Actions Workflow Status"></a>
-  <a href="https://github.com/therealFoxster/DontEatMyContent/releases/latest"><img src="https://img.shields.io/github/v/release/therealfoxster/donteatmycontent" alt="GitHub Release"></a>
-</p>
+A YouTube tweak that keeps the picture out from under the notch, the Dynamic Island, and the camera cutout on the iPhone Duo’s outer screen.
 
+On other iPhones the rendering view is pinned to the safe area for videos about 2:1 or wider, then nudged outward by the safe-area constant so the frame meets the island instead of leaving a gap. That is unchanged.
 
-## How it works
-The rendering view is constrained to the [safe area layout guide](https://developer.apple.com/documentation/uikit/uiview/2891102-safearealayoutguide?language=objc) of its container so it will always be below the notch and Dynamic Island ([learn more](https://developer.apple.com/documentation/uikit/uiview/positioning_content_relative_to_the_safe_area?language=objc)). These constraints are only activated for videos with 2:1 aspect ratio or wider to prevent unintended effects on videos with smaller aspect ratios. 
+The Duo’s outer display is different. It is a 466 × 678 pt panel with a 37 pt camera circle in the top-trailing corner, not a centered island. The safe area is a one-sided rail, so centering a safe-area-sized view puts the picture back on top of that circle. Fullscreen 16:9 is also wider than this short screen, so a normal video runs edge to edge and the lens covers a corner. This build places the largest aspect-fit frame that stays outside the cutout. It slides the picture when letterboxing leaves room, and only shrinks it when the frame would otherwise fill the corner. Zoom to fill still lets the video run under the lens, same as under the notch.
 
-## Compatibility
-Runs on all devices on iOS/iPadOS 14.0 or later, though I wouldn't recommend enabling the tweak if the notch doesn't cut into your videos.
+The cutout comes from UIKit’s occlusion reserved region when that API is present, so a Live Activity island is avoided too. Otherwise the layout uses the measured lens: a 37 pt circle centered 47.8 pt from the top and trailing edges of the portrait outer display. The safe-area constant is not applied there.
 
-## Grab it
-- IPA file: https://therealfoxster.github.io/uYouPlus
-- DEB file: https://github.com/therealFoxster/DontEatMyContent/releases/latest
+## Build
 
-## Preview - iPhone 15 Pro
-### Default
-<p align="center">
-<img src="https://github.com/therealFoxster/DontEatMyContent/assets/77606385/9fb9de61-e199-431e-adc7-24c055e9f020" width="640">
-</p>
+[Theos](https://theos.dev/) is required. The YouTube headers this tweak compiles against are included from [therealFoxster/YTHeaders](https://github.com/therealFoxster/YTHeaders) (`655ad036`).
 
-### Tweaked
-<p align="center">
-<img src="https://github.com/therealFoxster/DontEatMyContent/assets/77606385/8bd720a5-554f-44ba-af5f-822d8557578a" width="640">
-</p>
+```sh
+export THEOS=~/theos
+make package FINALPACKAGE=1
+```
 
-### Zoomed to fill
-<p align="center">
-<img src="https://github.com/therealFoxster/DontEatMyContent/assets/77606385/213bc8b9-0737-45ca-beaa-e8eae1081831" width="640">
-</p>
+The package is `me.foxster.donteatmycontent` and it injects into `com.google.ios.youtube`. Rootless packaging matches upstream:
+
+```sh
+make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+```
+
+There is no host app to run. The layout math for the outer-screen camera can be checked on its own:
+
+```sh
+clang -std=c11 -Wall -Wextra -Werror -DDEMC_CUTOUT_MAIN -x c -o /tmp/demc-cutout DuoCutout.m
+/tmp/demc-cutout
+```
+
+## Settings
+
+YouTube → Settings → DontEatMyContent. The safe-area constant still tunes notched phones. On the Duo outer screen the picture sits just outside the camera regardless of that value.
 
 ## License
-[The MIT License](LICENSE.md)
+
+[MIT](LICENSE.md). Based on [therealFoxster/DontEatMyContent](https://github.com/therealFoxster/DontEatMyContent).
