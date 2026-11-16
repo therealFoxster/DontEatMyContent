@@ -161,6 +161,9 @@ static void DEMC_deactivateConstraints(void) {
     heightConstraint.active = NO;
     centerXConstraint.active = NO;
     centerYConstraint.active = NO;
+    // YouTube's autoresizing and zoom start from the frame the Duo constraints left behind.
+    if (demcDuoConstraints && renderingView && renderingViewContainer)
+        renderingView.frame = renderingViewContainer.bounds;
 }
 
 static void DEMC_activateConstraints(void) {
