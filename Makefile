@@ -5,7 +5,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = DontEatMyContent
 
-DontEatMyContent_FILES = Tweak.x Settings.x
+DontEatMyContent_FILES = Tweak.x Settings.x DuoCutout.m
 DontEatMyContent_CFLAGS = -fobjc-arc -DTWEAK_VERSION=$(shell grep 'Version:' control | cut -d ' ' -f 2)
 DontEatMyContent_FRAMEWORKS = UIKit
 
