@@ -1,3 +1,4 @@
+#import <objc/message.h>
 #import "Tweak.h"
 #import "DuoCutout.h"
 
@@ -75,48 +76,24 @@ static CGRect DEMC_regionFrame(id region) {
     return CGRectNull;
 }
 
-static SEL DEMC_regionsSelector(UIView *view) {
-    SEL selectors[] = {
-        @selector(reservedRegionsWithKind:options:),
-        @selector(reservedRegionsOfKind:options:),
-    };
-    for (int i = 0; i < 2; i++) {
-        if ([view respondsToSelector:selectors[i]])
-            return selectors[i];
-    }
-    return NULL;
-}
-
+// -[UIView reservedRegionsOfKind:] is iOS 27.1 API, newer than the SDK this builds against.
 static int DEMC_reservedRegions(UIView *view, DEMCRect *output, int capacity) {
-    SEL selector = DEMC_regionsSelector(view);
-    if (!selector)
+    Class kindClass = NSClassFromString(@"UIViewReservedRegionKind");
+    SEL kindSelector = NSSelectorFromString(@"occlusionRegionKind");
+    SEL regionsSelector = NSSelectorFromString(@"reservedRegionsOfKind:");
+    if (![kindClass respondsToSelector:kindSelector] || ![view respondsToSelector:regionsSelector])
         return 0;
-    NSMethodSignature *signature = [view methodSignatureForSelector:selector];
-    const char *returnType = signature.methodReturnType;
-    if (signature.numberOfArguments != 4 || !returnType || returnType[0] != '@')
-        return 0;
+    id kind = ((id (*)(Class, SEL))objc_msgSend)(kindClass, kindSelector);
+    NSArray *regions = ((NSArray *(*)(id, SEL, id))objc_msgSend)(view, regionsSelector, kind);
 
     int count = 0;
-    for (NSInteger kind = 0; kind <= 1 && count < capacity; kind++) {
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-        invocation.selector = selector;
-        invocation.target = view;
-        NSUInteger options = 0;
-        [invocation setArgument:&kind atIndex:2];
-        [invocation setArgument:&options atIndex:3];
-        [invocation invoke];
-        NSArray * __unsafe_unretained regions = nil;
-        [invocation getReturnValue:&regions];
-        if (![regions isKindOfClass:[NSArray class]])
+    for (id region in regions) {
+        if (count >= capacity)
+            break;
+        CGRect frame = DEMC_regionFrame(region);
+        if (CGRectIsNull(frame) || CGRectIsEmpty(frame))
             continue;
-        for (id region in regions) {
-            if (count >= capacity)
-                break;
-            CGRect frame = DEMC_regionFrame(region);
-            if (CGRectIsNull(frame) || CGRectIsEmpty(frame))
-                continue;
-            output[count++] = DEMCRectFromCG(frame);
-        }
+        output[count++] = DEMCRectFromCG(frame);
     }
     return count;
 }
